@@ -1,11 +1,12 @@
+import {assetPath} from './assets';
 import {animalMarkup} from './animal';
 export const artSources: Record<string, string> = {
-  shengsheng: '/assets/art-v2/shengsheng.png',
-  zhuyu: '/assets/art-v2/zhuyu.png',
-  migu: '/assets/art-v2/migu.png',
-  stone: '/assets/art-v2/stone.png',
-  grove: '/assets/art-v2/grove.png',
-  traveler: '/assets/art-v2/traveler.png',
+  shengsheng: assetPath('art-v2/shengsheng.png'),
+  zhuyu: assetPath('art-v2/zhuyu.png'),
+  migu: assetPath('art-v2/migu.png'),
+  stone: assetPath('art-v2/stone.png'),
+  grove: assetPath('art-v2/grove.png'),
+  traveler: assetPath('art-v2/traveler.png'),
 };
 
 export const artDetails: Record<string, {key:string; name:string; alt:string; traits:string[]; interpretation:string}> = {

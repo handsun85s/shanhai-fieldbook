@@ -8,9 +8,10 @@ import {entries, spots, source, stoneEntry} from './content';
 import {artSources, artDetails, specimen} from './artwork';
 import {restore,record,finish,canFinish,SAVE_KEY} from './progress.mjs';
 
-let storageOK=true;
-let raw:string|null=null;
-try { raw=localStorage.getItem(SAVE_KEY); } catch {storageOK=false;}
+import {readSave,writeSave} from './storage.mjs';
+const saved=readSave(SAVE_KEY);
+let storageOK=saved.ok;
+const raw=saved.raw;
 let state=restore(raw);
 let modal=false, paused=false, journal=false, mapOpen=false, hintLevel=0, targetId='';
 let scene:Trail;
@@ -31,6 +32,7 @@ app.innerHTML=`
 <div class="map-zoom" aria-label="地图缩放"><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-level">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div><div id="loading" role="status"><span class="eyebrow">山海行记 · 绘卷将启</span><strong>正在铺开山川草木…</strong><span id="loading-progress">0%</span></div><div id="overlay" hidden></div>
 </main>`;
 
+$('#save-status').textContent=storageOK?'进度保存在此浏览器':'当前无法保存 · 请勿关闭页面';
 $('#world-btn').onclick=()=>{scene?.stop();openWorldMap();};
 document.addEventListener('worldmapclose',()=>scene?.stop());
 document.addEventListener('worldtravel',e=>{scene?.stop();goExpedition((e as CustomEvent).detail);});
@@ -53,7 +55,7 @@ artDialog.querySelector<HTMLButtonElement>('.detail-plus')!.onclick=()=>scale(.5
 artDialog.querySelector<HTMLButtonElement>('.detail-minus')!.onclick=()=>scale(-.5);
 artDialog.showModal();}
 document.addEventListener('click',e=>{const b=(e.target as HTMLElement).closest<HTMLElement>('[data-art]');if(b)showArt(b.dataset.art!);});
-function persist(){if(scene){state.x=Math.round(scene.player.x);state.y=Math.round(scene.player.y);}try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));storageOK=true;}catch{storageOK=false;}$('#save-status').textContent=storageOK?'进度已保存 · 此设备':'当前无法保存 · 请勿关闭页面';}
+function persist(){if(scene?.player){state.x=Math.round(scene.player.x);state.y=Math.round(scene.player.y);}storageOK=writeSave(SAVE_KEY,state);$('#save-status').textContent=storageOK?'进度已保存 · 此设备':'当前无法保存 · 请勿关闭页面';}
 let toastTimer:ReturnType<typeof setTimeout>;
 function toast(text:string){$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3600);}
 function gain(id:string){const isNew=!state.facts.includes(id);state=record(state,id);persist();updateUI();if(isNew)sound.cue();if(isNew)toast(`手记添一笔 · ${entries.find(e=>e.id===id)?.title}`);}

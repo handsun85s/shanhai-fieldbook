@@ -1,5 +1,7 @@
 # 首版验证记录
 
+最新的 2026-11-14 项目标准审核与 GitHub Pages 交付记录见 [docs/progress.md](docs/progress.md)，统一验收标准见 [docs/requirements.md](docs/requirements.md)。以下保留各阶段历史证据，不代表这些流程都在最新一轮重新实走。
+
 ## 第二版美术更新验证（2026-11-13）
 
 - 狌狌双姿态、祝余、迷榖、金玉、背景树和旅人六张透明插图已接入地图。

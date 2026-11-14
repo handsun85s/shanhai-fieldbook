@@ -1,3 +1,4 @@
+import {assetPath} from './assets';
 // Ambient sound is synthesized. Creature comparisons use licensed recordings.
 // Provenance: public/assets/audio-v2/LICENSES.md.
 class Soundscape {
@@ -12,7 +13,7 @@ class Soundscape {
  setVolume(v:number){this.volume=Math.max(0,Math.min(1,v));this.apply();}
  stopCall(){this.generation++;this.active?.stop();this.active?.disconnect();this.active=null;this.finish?.();this.finish=null;}
  async call(kind:string){if(!['lushu','xuangui','ninefox'].includes(kind))return;if(!this.ctx||!this.master||!this.enabled)throw Error('Audio is not enabled');this.stopCall();const generation=this.generation,ctx=this.ctx;
-  if(!this.buffers.has(kind)){const promise=fetch(`/assets/audio-v2/${kind}.mp3`).then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).then(b=>ctx.decodeAudioData(b)).catch(e=>{this.buffers.delete(kind);throw e;});this.buffers.set(kind,promise);}
+  if(!this.buffers.has(kind)){const promise=fetch(assetPath(`audio-v2/${kind}.mp3`)).then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).then(b=>ctx.decodeAudioData(b)).catch(e=>{this.buffers.delete(kind);throw e;});this.buffers.set(kind,promise);}
   const buffer=await this.buffers.get(kind)!;if(generation!==this.generation||!this.enabled||document.hidden)return;
   await new Promise<void>(resolve=>{const src=ctx.createBufferSource();src.buffer=buffer;src.connect(this.master!);this.active=src;this.finish=resolve;src.onended=()=>{src.disconnect();if(this.active===src){this.active=null;this.finish=null;}resolve();};src.start();});
  }

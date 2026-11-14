@@ -1,6 +1,7 @@
+import {assetPath} from './assets';
 export type Observation={id:string;name:string;x:number;y:number;image:string;quote:string;text:string;question:string;options:string[];answer:number;call?:string;caption:string};
 export type Mountain={id:string;name:string;subtitle:string;route:string;intro:string;color:string;water:string;points:Observation[]};
-const art='/assets/art-v2/';
+const art=assetPath('art-v2/');
 export const mountains:Mountain[]=[
 {id:'tangting',name:'堂庭山',subtitle:'白猿与水玉',route:'招摇之东三百里',intro:'林间白猿、水玉与黄金，是这一山的三条线索。先到林缘，再沿山径观察原石。',color:'#bdcbb0',water:'林中浅溪为场景演绎，原文未规定河道',points:[
 {id:'ape',name:'林间白猿',x:440,y:260,image:art+'whiteape.png',quote:'多白猿',text:'正文记载堂庭山多白猿。白色毛发是观察线索；具体姿态、脸部和生活习性并未在这句中交代。',question:'哪一个外形线索最直接对应原文？',options:['白色毛发','九条尾巴','头上长角'],answer:0,caption:'姿态与面部为美术演绎；没有给白猿指定正文未记载的叫声。'},

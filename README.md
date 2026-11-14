@@ -2,6 +2,18 @@
 
 面向 10 岁以上玩家的《山海经》2D 考察游戏。通过观察草木、异兽与山川，阅读原文和儿童释义，完成考察手记。使用 Phaser 4、TypeScript 和 Vite；进度保存在当前浏览器本地。
 
+[直接打开游戏](https://handsun85s.github.io/shanhai-fieldbook/) · [公开源码](https://github.com/handsun85s/shanhai-fieldbook)
+
+手机或电脑浏览器均可打开，无需 GitHub 登录。换设备、浏览器或从旧站点切换到此域名时，记录不会自动同步；收藏上面的游戏链接即可再次访问。
+
+## 接手与验收
+
+- [需求、范围与验收标准](docs/requirements.md)
+- [架构、运行与发布](docs/architecture.md)
+- [本轮审核、实际验证与进度](docs/progress.md)
+
+GitHub Pages 由 main 自动测试和构建后部署。手动检查相同产物可运行 `npm run build:pages`，再运行 `npm run preview -- --base=/shanhai-fieldbook/`。
+
 ## 当前内容
 
 - 四座可探索山：招摇山、堂庭山、杻阳山、青丘山。
