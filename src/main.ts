@@ -1,7 +1,9 @@
 import * as Phaser from 'phaser';
 import './style.css';
 import {sound} from './sound';
-import {openExpeditions,expeditionOpen} from './expeditions';
+import {openWorldMap,worldMapOpen,setWorldLocation} from './worldmap';
+import {animalMarkup,bindAnimals} from './animal';
+import {openExpeditions,expeditionOpen,goExpedition} from './expeditions';
 import {entries, spots, source, stoneEntry} from './content';
 import {artSources, artDetails, specimen} from './artwork';
 import {restore,record,finish,canFinish,SAVE_KEY} from './progress.mjs';
@@ -15,7 +17,7 @@ let scene:Trail;
 const $=(s:string)=>document.querySelector(s) as HTMLElement;
 const app=$('#app');
 app.innerHTML=`
-<header><a class="brand" href="#" aria-label="山海行记首页"><span class="seal">山海</span><span>山海行记<small>一山一世界，一步一发现</small></span></a><div class="chapter">山经 · 南山经 <span> / </span> 第一回 · 招摇山</div><nav><button id="atlas-btn" aria-label="探索其他山岳">山海舆图</button><div class="sound-controls"><button id="sound-btn" aria-label="开启或关闭声音">开启声音</button><label id="sound-label" for="volume-control">音量</label><input id="volume-control" type="range" min="0" max="100" value="35" aria-label="音量"/></div><button id="map-btn" aria-label="山行图">◈ <span>山行图</span></button><button id="book-btn" aria-label="我的手记">▤ <span>我的手记</span><b id="book-count">0</b></button><button id="pause-btn" aria-label="暂停与设置">Ⅱ</button></nav></header>
+<header><a class="brand" href="#" aria-label="山海行记首页"><span class="seal">山海</span><span>山海行记<small>一山一世界，一步一发现</small></span></a><div class="chapter">山经 · 南山经 <span> / </span> 第一回 · 招摇山</div><nav><button id="world-btn" aria-label="山海经全书地图">全书地图</button><button id="atlas-btn" aria-label="探索其他山岳">山海舆图</button><div class="sound-controls"><button id="sound-btn" aria-label="开启或关闭声音">开启声音</button><label id="sound-label" for="volume-control">音量</label><input id="volume-control" type="range" min="0" max="100" value="35" aria-label="音量"/></div><button id="map-btn" aria-label="山行图">◈ <span>山行图</span></button><button id="book-btn" aria-label="我的手记">▤ <span>我的手记</span><b id="book-count">0</b></button><button id="pause-btn" aria-label="暂停与设置">Ⅱ</button></nav></header>
 <main id="stage"><div id="game" aria-label="招摇山探索地图：方向键移动，E观察，也可点击地面移动" tabindex="0"></div>
 <section class="quest"><div class="eyebrow">此行 · 招摇山</div><h1 id="quest-title">循水入山，识万物</h1><p id="quest-text">沿溪流走走，看看山里藏着什么。</p><div class="progress-track"><i id="progress"></i></div><div class="quest-foot"><span id="count">发现 0 / 5</span><button id="hint-btn">给我一点提示 ↗</button></div><p id="hint-text" class="hint" hidden></p></section>
 <button id="guide-btn" hidden title="游戏演绎：以迷榖标记营地方向">✧ 迷榖指归</button><div class="compass" aria-label="上北下南左西右东"><span>北</span><div>西 <b>✧</b> 东</div><span>南</span></div>
@@ -29,6 +31,9 @@ app.innerHTML=`
 <div class="map-zoom" aria-label="地图缩放"><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-level">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div><div id="loading" role="status"><span class="eyebrow">山海行记 · 绘卷将启</span><strong>正在铺开山川草木…</strong><span id="loading-progress">0%</span></div><div id="overlay" hidden></div>
 </main>`;
 
+$('#world-btn').onclick=()=>{scene?.stop();openWorldMap();};
+document.addEventListener('worldmapclose',()=>scene?.stop());
+document.addEventListener('worldtravel',e=>{scene?.stop();goExpedition((e as CustomEvent).detail);});
 $('#atlas-btn').onclick=()=>{scene?.stop();openExpeditions();};
 function refreshSound(){$('#sound-btn').textContent=sound.enabled?'声音：开':'开启声音';$('#sound-btn').setAttribute('aria-pressed',String(sound.enabled));}
 $('#sound-btn').onclick=async()=>{if(sound.enabled)sound.mute();else if(!await sound.start())toast('声音未能启动，请再次点击。');refreshSound();};
@@ -36,8 +41,11 @@ $('#volume-control').oninput=e=>sound.setVolume(Number((e.target as HTMLInputEle
 document.addEventListener('soundchange',refreshSound);
 const artDialog=document.createElement('dialog');
 artDialog.className='art-detail';artDialog.setAttribute('aria-label','山海图鉴细节');document.body.append(artDialog);
-artDialog.addEventListener('close',()=>scene?.stop());
-function showArt(id:string){const a=artDetails[id];if(!a)return;scene?.stop();
+let cleanupArt=()=>{};
+artDialog.addEventListener('close',()=>{cleanupArt();sound.stopCall();scene?.stop();});
+function showArt(id:string){const a=artDetails[id];if(!a)return;scene?.stop();cleanupArt();
+if(a.key==='shengsheng'){artDialog.innerHTML=`<div class="detail-heading"><div><span class="eyebrow">山海图鉴 · 点击观察</span><h2>${a.name}</h2></div><button class="detail-close" aria-label="关闭图鉴">×</button></div>${animalMarkup('shengsheng')}<p class="detail-note">${a.interpretation}</p>`;cleanupArt=bindAnimals(artDialog);artDialog.querySelector<HTMLButtonElement>('.detail-close')!.onclick=()=>artDialog.close();artDialog.showModal();return;}
+
 artDialog.innerHTML=`<div class="detail-heading"><div><span class="eyebrow">山海图鉴 · 工笔淡彩</span><h2>${a.name}</h2></div><button class="detail-close" aria-label="关闭图鉴">×</button></div><div class="detail-canvas" tabindex="0" aria-label="图像查看区域，放大后可以滚动查看"><img src="${artSources[a.key]}" alt="${a.alt}"/></div><div class="detail-tools"><span>原文线索 · ${a.traits.join(' / ')}</span><div><button class="detail-minus" aria-label="缩小插图">−</button><output>100%</output><button class="detail-plus" aria-label="放大插图">＋</button></div></div><p class="detail-note"><b>依据与演绎</b>${a.interpretation} <a href="${source}" target="_blank" rel="noopener">查阅原文 ↗</a></p>`;
 let zoom=1;const scale=(amount:number)=>{zoom=Phaser.Math.Clamp(zoom+amount,1,3);const img=artDialog.querySelector('img')!;img.style.width=zoom*100+'%';img.style.height=zoom*100+'%';artDialog.querySelector('output')!.textContent=Math.round(zoom*100)+'%';};
 artDialog.querySelector<HTMLButtonElement>('.detail-close')!.onclick=()=>artDialog.close();
@@ -51,8 +59,9 @@ function toast(text:string){$('#toast').textContent=text;$('#toast').classList.a
 function gain(id:string){const isNew=!state.facts.includes(id);state=record(state,id);persist();updateUI();if(isNew)sound.cue();if(isNew)toast(`手记添一笔 · ${entries.find(e=>e.id===id)?.title}`);}
 function updateUI(){const n=state.facts.length;$('#guide-btn').hidden=!state.facts.includes('migu');$('#count').textContent=`发现 ${n} / 5`;$('#book-count').textContent=String(n);$('#progress').style.width=`${n*20}%`;$('#quest-title').textContent=state.completed?'此山已识，余兴未尽':canFinish(state)?'循水归去，完成山行':'循水入山，识万物';$('#quest-text').textContent=state.completed?'手记已经收好。你可以继续漫步，重看每一处发现。':canFinish(state)?'回到西边的海岸营地，把今天的发现带回家。':'辨认两种草木，观察狌狌，再读懂水流的方向。'; if(journal)renderJournal();if(mapOpen)renderMap();}
 let focusBefore:HTMLElement|null=null;
-function openModal(html:string){focusBefore=document.activeElement as HTMLElement;modal=true;scene?.stop();$('#overlay').innerHTML=html;$('#overlay').hidden=false;$('#overlay').setAttribute('role','dialog');$('#overlay').setAttribute('aria-modal','true');$('#overlay').setAttribute('aria-label','考察对话');setTimeout(()=>$('#overlay').querySelector<HTMLButtonElement>('button')?.focus(),0);}
-function closeModal(){modal=false;$('#overlay').hidden=true;$('#overlay').innerHTML='';scene?.stop();focusBefore?.focus();}
+let cleanupObservation=()=>{};
+function openModal(html:string){focusBefore=document.activeElement as HTMLElement;modal=true;scene?.stop();cleanupObservation();$('#overlay').innerHTML=html;cleanupObservation=bindAnimals($('#overlay'));$('#overlay').hidden=false;$('#overlay').setAttribute('role','dialog');$('#overlay').setAttribute('aria-modal','true');$('#overlay').setAttribute('aria-label','考察对话');setTimeout(()=>$('#overlay').querySelector<HTMLButtonElement>('button')?.focus(),0);}
+function closeModal(){cleanupObservation();sound.stopCall();modal=false;$('#overlay').hidden=true;$('#overlay').innerHTML='';scene?.stop();focusBefore?.focus();}
 function note(id:string){const e=id==='stone'?stoneEntry:entries.find(e=>e.id===id)!;openModal(`<section class="dialog discovery"><div class="eyebrow">山海手记 · ${e.tag}</div><button class="close" aria-label="关闭">×</button>${specimen(id)}<h2>${e.title}</h2><blockquote>${e.quote}</blockquote><p>${e.text}</p><div class="annotation"><b>原文与演绎</b>${e.note}</div><button class="primary done">收好手记，继续山行 →</button></section>`);$('#overlay .close').onclick=closeModal;$('#overlay .done').onclick=closeModal;}
 const questions:Record<string,{title:string,desc:string,options:string[],correct:number,feedback:string[]}>={
  zhuyu:{title:'溪边的草，会是祝余吗？',desc:'俯身看：这一丛叶子细长，花呈青色。手册上哪一条描述与它吻合？',options:['像韭菜，开青色的花','宽大的圆叶，结红色的果','黑色树纹，花光照向四方'],correct:0,feedback:['','再看看叶子：它们细长，眼前开的是花，没有红果。','这一条更像是在描述一棵树。眼前是一丛草。']},
@@ -75,8 +84,8 @@ $('#observe-btn').onclick=()=>scene?.near&&interact(scene.near.id);
 $('#guide-btn').onclick=()=>{if(modal||paused||journal||mapOpen)return;targetId='camp';scene.markTarget();toast('迷榖为你指向营地 · “佩之不迷”的游戏演绎');};
 function pauseMenu(){if(modal)return;paused=true;scene?.stop();persist();openModal(`<section class="dialog"><div class="eyebrow">山行小憩</div><h2>歇一歇，山还在这里。</h2><p>当前进度${storageOK?'已保存在此设备。':'无法写入浏览器，请保持页面开启。'}</p><button class="primary resume">继续探索 →</button><button class="secondary motion">${reduced?'开启':'减少'}动态效果</button><button class="secondary restart">重新开始这次考察</button><p class="muted">操作：方向键 / WASD 移动，E 观察，J 手记，M 地图，Esc 暂停或关闭面板。也可以点击地面移动。</p></section>`);$('#overlay .resume').onclick=()=>{paused=false;closeModal();};$('#overlay .motion').onclick=()=>{reduced=!reduced;$('#overlay .motion').textContent=`${reduced?'开启':'减少'}动态效果`;};$('#overlay .restart').onclick=()=>{openModal(`<section class="dialog"><h2>重新写一本手记？</h2><p>这会清除当前设备上的五项发现和位置。其他内容不受影响。</p><button class="primary cancel">保留进度</button><button class="secondary reset">清除并重新出发</button></section>`);$('#overlay .cancel').onclick=()=>{paused=false;closeModal();};$('#overlay .reset').onclick=()=>{state=restore(null);state.started=true;scene.player.setPosition(470,1120);scene.stop();targetId='';hintLevel=0;$('#hint-text').hidden=true;scene.markTarget();persist();updateUI();paused=false;closeModal();};};}
 $('#zoom-in').onclick=()=>scene?.zoomMap(.15);$('#zoom-out').onclick=()=>scene?.zoomMap(-.15);
-$('#pause-btn').onclick=pauseMenu;$('.brand').onclick=e=>{e.preventDefault();if(!modal&&!expeditionOpen)pauseMenu();};
-document.addEventListener('keydown',e=>{if(artDialog.open||expeditionOpen)return;if(e.key==='Tab'&&modal){const items=[...$('#overlay').querySelectorAll<HTMLElement>('button:not(:disabled),a[href]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}return;}if(e.key==='Escape'){if(modal){if($('#overlay').classList.contains('intro-overlay'))return;paused=false;closeModal();}else if(journal)toggleJournal(false);else if(mapOpen){mapOpen=false;$('#map').hidden=true;}else pauseMenu();return;}if(modal||paused)return;if(e.key.toLowerCase()==='j')toggleJournal();if(e.key.toLowerCase()==='m')$('#map-btn').click();if(e.key.toLowerCase()==='e'&&scene?.near)interact(scene.near.id);});
+$('#pause-btn').onclick=pauseMenu;$('.brand').onclick=e=>{e.preventDefault();if(!modal&&!expeditionOpen&&!worldMapOpen)pauseMenu();};
+document.addEventListener('keydown',e=>{if(artDialog.open||expeditionOpen||worldMapOpen)return;if(e.key==='Tab'&&modal){const items=[...$('#overlay').querySelectorAll<HTMLElement>('button:not(:disabled),a[href]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}return;}if(e.key==='Escape'){if(modal){if($('#overlay').classList.contains('intro-overlay'))return;paused=false;closeModal();}else if(journal)toggleJournal(false);else if(mapOpen){mapOpen=false;$('#map').hidden=true;}else pauseMenu();return;}if(modal||paused)return;if(e.key.toLowerCase()==='j')toggleJournal();if(e.key.toLowerCase()==='m')$('#map-btn').click();if(e.key.toLowerCase()==='e'&&scene?.near)interact(scene.near.id);});
 window.addEventListener('blur',()=>{scene?.stop();});document.addEventListener('visibilitychange',()=>{if(document.hidden){persist();if(!modal&&!expeditionOpen)pauseMenu();}});
 let reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const touch={up:false,down:false,left:false,right:false};
@@ -133,14 +142,14 @@ create(){if(Object.keys(artSources).some(key=>!this.textures.exists(key))){$('#l
  this.beast=this.add.container(1810,557);this.drawBeast(false);this.beast.setDepth(1700);
  this.targetText=this.add.text(0,0,'',{fontFamily:'Microsoft YaHei',fontSize:'15px',color:'#fff6dd',backgroundColor:'#345748',padding:{x:10,y:8}}).setDepth(2100).setOrigin(.5).setVisible(false);
  const kb=this.input.keyboard!;this.keys=kb.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT') as Record<string,Phaser.Input.Keyboard.Key>;
- this.input.on('pointerdown',(p:Phaser.Input.Pointer)=>{if(modal||paused||journal||mapOpen||expeditionOpen||!state.started)return;const world=this.cameras.main.getWorldPoint(p.x,p.y);this.destination=new Phaser.Math.Vector2(Phaser.Math.Clamp(world.x,380,2150),Phaser.Math.Clamp(world.y,220,1250));this.trail.clear();this.trail.lineStyle(2,0xf6efcf,.9);this.trail.strokeCircle(this.destination.x,this.destination.y,12);});
+ this.input.on('pointerdown',(p:Phaser.Input.Pointer)=>{if(modal||paused||journal||mapOpen||expeditionOpen||worldMapOpen||!state.started)return;const world=this.cameras.main.getWorldPoint(p.x,p.y);this.destination=new Phaser.Math.Vector2(Phaser.Math.Clamp(world.x,380,2150),Phaser.Math.Clamp(world.y,220,1250));this.trail.clear();this.trail.lineStyle(2,0xf6efcf,.9);this.trail.strokeCircle(this.destination.x,this.destination.y,12);});
  this.cameras.main.startFollow(this.player,true,.08,.08);this.resize();this.scale.on('resize',()=>this.resize());updateUI();intro();
 }
 drawBeast(upright:boolean){this.beast.removeAll(true);const shadow=this.add.ellipse(0,4,upright?83:145,23,0x375144,.17);const sprite=this.add.image(0,8,'shengsheng',upright?'upright':'crawl').setOrigin(.5,1).setScale(.24);this.beast.add([shadow,sprite]);}
 resize(){const w=this.scale.width;this.cameras.main.setZoom(w<650?.85:1);$('#zoom-level').textContent=Math.round(this.cameras.main.zoom*100)+'%';}
 stop(){this.destination=null;this.trail?.clear();Object.keys(touch).forEach(k=>touch[k as keyof typeof touch]=false);if(this.keys)Object.values(this.keys).forEach(k=>k.reset());}
 markTarget(){this.targetMark.clear();const s=spots.find(s=>s.id===targetId);if(s){this.targetMark.lineStyle(3,0xffe5a0,.85);this.targetMark.strokeCircle(s.x,s.y,64);}this.targetText?.setVisible(!!s);}
-update(time:number,delta:number){if(!this.player)return;const dt=Math.min(delta,50)/1000;const blocked=modal||paused||journal||mapOpen||artDialog.open||expeditionOpen||!state.started;
+update(time:number,delta:number){if(!this.player)return;const dt=Math.min(delta,50)/1000;const blocked=modal||paused||journal||mapOpen||artDialog.open||expeditionOpen||worldMapOpen||!state.started;
  let dx=0,dy=0;if(!blocked){dx=Number(this.keys.D.isDown||this.keys.RIGHT.isDown||touch.right)-Number(this.keys.A.isDown||this.keys.LEFT.isDown||touch.left);dy=Number(this.keys.S.isDown||this.keys.DOWN.isDown||touch.down)-Number(this.keys.W.isDown||this.keys.UP.isDown||touch.up);if(dx||dy)this.destination=null;else if(this.destination){const dist=Phaser.Math.Distance.Between(this.player.x,this.player.y,this.destination.x,this.destination.y);if(dist<7){this.destination=null;this.trail.clear();}else{dx=(this.destination.x-this.player.x)/dist;dy=(this.destination.y-this.player.y)/dist;}}const len=Math.hypot(dx,dy);if(len){this.player.x=Phaser.Math.Clamp(this.player.x+dx/len*235*dt,380,2150);this.player.y=Phaser.Math.Clamp(this.player.y+dy/len*235*dt,220,1250);this.player.setScale(dx<0?-1:1,1);}}
  this.near=spots.find(s=>Math.hypot(this.player.x-s.x,this.player.y-s.y)<105)??null;
  $('#prompt').hidden=!this.near||blocked||this.watching;if(this.near){$('#prompt-name').textContent=this.near.name;$('#observe-btn').innerHTML=`<kbd>E</kbd> ${this.near.id==='camp'?(canFinish(state)?'完成考察':'停步'):(state.facts.includes(this.near.id)?'重温':'观察')}`;}
@@ -154,6 +163,7 @@ update(time:number,delta:number){if(!this.player)return;const dt=Math.min(delta,
  const water=curve??new Phaser.Curves.Spline([[1940,570],[1600,700],[1320,900],[1030,850],[820,1020],[500,1040],[280,1100]].map(([x,y])=>new Phaser.Math.Vector2(x,y)));if(!curve)this.registry.set('riverCurve',water);
  this.flow.forEach((p,i)=>{const at=water.getPoint((reduced?i/14:time/19000+i/14)%1);p.setPosition(at.x,at.y);});
  const target=spots.find(s=>s.id===targetId);if(target){const cam=this.cameras.main,dist=Math.hypot(target.x-this.player.x,target.y-this.player.y),angle=Math.atan2(target.y-this.player.y,target.x-this.player.x);this.targetText.setPosition(this.player.x+Math.cos(angle)*120,this.player.y+Math.sin(angle)*120-40);this.targetText.setText(`${target.name} ${dist<105?'· 已到达':['→','↘','↓','↙','←','↖','↑','↗'][(Math.round(angle/(Math.PI/4))+8)%8]}`);this.targetText.setVisible(!blocked);if(dist<70){targetId='';this.targetMark.clear();this.targetText.setVisible(false);}void cam;}
+ if(!expeditionOpen)setWorldLocation({id:'zhaoyao',name:'招摇山',area:this.near?.name??(this.player.x<650?'西海岸 · 招摇山麓':this.player.x>1650?'深林 · 狌狌出没处':this.player.y<700?'山中 · 迷榖古木':'溪谷 · 循水小径'),x:this.player.x,y:this.player.y,width:2400,height:1500,points:spots});
  $('#location').textContent=this.player.x<650?'西海岸 · 招摇山麓':this.player.x>1650?'深林 · 狌狌出没处':this.player.y<700?'山中 · 迷榖古木':'溪谷 · 循水小径';
  if(time-this.lastSave>4500&&!blocked){persist();this.lastSave=time;}
 }

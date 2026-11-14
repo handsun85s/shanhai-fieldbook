@@ -1,3 +1,4 @@
+import {animalMarkup} from './animal';
 export const artSources: Record<string, string> = {
   shengsheng: '/assets/art-v2/shengsheng.png',
   zhuyu: '/assets/art-v2/zhuyu.png',
@@ -17,6 +18,7 @@ export const artDetails: Record<string, {key:string; name:string; alt:string; tr
 
 export function specimen(id:string, compact=false) {
   const a=artDetails[id];
+  if(a?.key==='shengsheng'&&!compact)return `<figure class="art-plate">${animalMarkup('shengsheng')}<button class="animal-zoom" data-art="${id}">展开互动图鉴 ↗</button></figure>`;
   if(!a) return '<div class="specimen river" aria-hidden="true">≈</div>';
   return `<figure class="art-plate ${compact?'compact':''} ${a.key}"><button class="art-open" data-art="${id}" aria-label="放大查看${a.name}"><img src="${artSources[a.key]}" alt="${a.alt}"/><span class="plate-action">细看图鉴 ↗</span></button><figcaption>${a.traits.map(t=>`<span>${t}</span>`).join('')}</figcaption></figure>`;
 }

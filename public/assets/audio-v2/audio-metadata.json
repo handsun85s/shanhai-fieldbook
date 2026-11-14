@@ -1,0 +1,32 @@
+[
+  {
+    "file": "lushu.mp3",
+    "start_seconds": 2,
+    "duration_seconds": 5.0,
+    "peak_dbfs": -14.43,
+    "rms_dbfs": -24.45,
+    "sha256": "69a903130b4049b0c0695d1da06024e574c0ba5d30f40d6817148ddd2c46cd2e",
+    "source_sha256": "91cbe734978378ef1283ad4c0266600b663f2ebc5ba6cdd7eb4f5cc7f9058873",
+    "size_bytes": 81127
+  },
+  {
+    "file": "xuangui.mp3",
+    "start_seconds": 0,
+    "duration_seconds": 4.592993197278911,
+    "peak_dbfs": -6.61,
+    "rms_dbfs": -34.11,
+    "sha256": "e6e8e1e11b548eefc6d56696e4adf252aa96e35169c35c2a88013058d9b3bd66",
+    "source_sha256": "b55b6c1036a81a8e325020a551e13e549284616fd41a0be04a0d7888528f4abb",
+    "size_bytes": 74439
+  },
+  {
+    "file": "ninefox.mp3",
+    "start_seconds": 0,
+    "duration_seconds": 3.2239909297052156,
+    "peak_dbfs": -9.59,
+    "rms_dbfs": -24.45,
+    "sha256": "f4e1b17c44027393917dcf56c1c44a881e720dddfce78182df25bf09c4d94026",
+    "source_sha256": "8d8522ef99c86a700e3d682246f9687015ea42a80850fd8717bcb3d172fdd42f",
+    "size_bytes": 52705
+  }
+]
