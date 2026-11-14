@@ -31,4 +31,13 @@
 
 ## 版本与下一步
 
-本轮提交可用 `git log --oneline -- docs/progress.md` 定位；基线 `fb558ca` 可比较。handsun85s/shanhai-fieldbook 已按最新要求设为公开，Pages 配置为 GitHub Actions。线上验收结果在部署完成后追加。下一步优先真实试玩，按卡点决定是否继续深化新山，不用新增章节数量代替学习体验验证。
+实现提交：`3cc3b4f`（基线 `fb558ca`）。handsun85s/shanhai-fieldbook 已按最新要求设为公开，Pages 配置为 GitHub Actions。后续仅记录验收的文档提交不改变游戏产物。
+
+公开游戏：https://handsun85s.github.io/shanhai-fieldbook/
+
+- [GitHub Actions 43573655831](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/43573655831)：build、deploy 均 success；部署对应 `3cc3b4f1ab827ec9d7fdc314d966d80f8b86f41e`。
+- 未携带凭据请求首页、九尾狐 PNG、鹿蜀/旋龟/九尾狐三个 MP3，全部 HTTP 200，内容类型分别为 HTML、PNG 和音频。
+- 线上浏览器看到完整开场，点击启程后进入招摇营地，显示“进度已保存”；截图位于工作区上层 `github-pages-live.png`。线上未重新完整走完四山；更深入的桌面/手机操作验收在同一构建的本地预览执行。
+- 桌面从已保存手记重开鹿蜀卡片，播放后立即停止，按钮和反馈复位，实际通过。
+
+下一步优先真实试玩，按卡点决定是否继续深化新山，不用新增章节数量代替学习体验验证。
