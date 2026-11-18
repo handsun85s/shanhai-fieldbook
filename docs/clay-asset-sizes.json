@@ -1,0 +1,106 @@
+[
+  {
+    "file": "public\\assets\\art-clay-v2\\lushu.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 1184147,
+    "after": 804460,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\quartz.webp",
+    "width": 1312,
+    "height": 1199,
+    "before": 1328952,
+    "after": 823116,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\shengsheng.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 1120412,
+    "after": 732532,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\traveler-walk.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 1195679,
+    "after": 812752,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\whiteape.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 1415102,
+    "after": 897654,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\xuangui.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 865949,
+    "after": 557750,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v2\\yanwood.webp",
+    "width": 1312,
+    "height": 1199,
+    "before": 1466691,
+    "after": 975052,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v1\\grove.webp",
+    "width": 1312,
+    "height": 1199,
+    "before": 1304340,
+    "after": 845616,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v1\\migu.webp",
+    "width": 1312,
+    "height": 1199,
+    "before": 1987920,
+    "after": 1390046,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v1\\stone.webp",
+    "width": 1536,
+    "height": 1024,
+    "before": 2302090,
+    "after": 1069926,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v1\\traveler.webp",
+    "width": 1024,
+    "height": 1536,
+    "before": 2350475,
+    "after": 1029616,
+    "alpha": true
+  },
+  {
+    "file": "public\\assets\\art-clay-v1\\zhuyu.webp",
+    "width": 1536,
+    "height": 1024,
+    "before": 2190853,
+    "after": 920992,
+    "alpha": true
+  },
+  {
+    "file": "public/assets/art-clay-v2/fox.webp",
+    "width": 2172,
+    "height": 724,
+    "before": 1718057,
+    "after": 1200832,
+    "alpha": true
+  }
+]

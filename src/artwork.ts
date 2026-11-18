@@ -1,13 +1,15 @@
 import {assetPath} from './assets';
 import {clayArt} from './clay';
 import {animalMarkup} from './animal';
+import {creatureURL,sheetMarkup,creatureFolder} from './creatures';
 export const artSources: Record<string, string> = {
-  shengsheng: assetPath('art-v2/shengsheng.png'),
-  zhuyu: assetPath(clayArt+'zhuyu.png'),
-  migu: assetPath(clayArt+'migu.png'),
-  stone: assetPath(clayArt+'stone.png'),
-  grove: assetPath(clayArt+'grove.png'),
-  traveler: assetPath(clayArt+'traveler.png'),
+  shengsheng: creatureURL('shengsheng'),
+  travelerWalk: assetPath(creatureFolder+'traveler-walk.webp'),
+  zhuyu: assetPath(clayArt+'zhuyu.webp'),
+  migu: assetPath(clayArt+'migu.webp'),
+  stone: assetPath(clayArt+'stone.webp'),
+  grove: assetPath(clayArt+'grove.webp'),
+  traveler: assetPath(clayArt+'traveler.webp'),
 };
 
 export const artDetails: Record<string, {key:string; name:string; alt:string; traits:string[]; interpretation:string}> = {
@@ -20,6 +22,7 @@ export const artDetails: Record<string, {key:string; name:string; alt:string; tr
 
 export function specimen(id:string, compact=false) {
   const a=artDetails[id];
+  if(a?.key==='shengsheng'&&compact)return `<figure class="art-plate compact"><button class="art-open" data-art="${id}" aria-label="放大查看狌狌">${sheetMarkup('shengsheng')}</button></figure>`;
   if(a?.key==='shengsheng'&&!compact)return `<figure class="art-plate">${animalMarkup('shengsheng')}<button class="animal-zoom" data-art="${id}">展开互动图鉴 ↗</button></figure>`;
   if(!a) return '<div class="specimen river" aria-hidden="true">≈</div>';
   return `<figure class="art-plate ${compact?'compact':''} ${a.key}"><button class="art-open" data-art="${id}" aria-label="放大查看${a.name}"><img src="${artSources[a.key]}" alt="${a.alt}"/><span class="plate-action">细看图鉴 ↗</span></button><figcaption>${a.traits.map(t=>`<span>${t}</span>`).join('')}</figcaption></figure>`;

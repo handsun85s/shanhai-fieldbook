@@ -1,4 +1,5 @@
 import './minimap.css';
+import {terrain as buildTerrain} from './navigation.mjs';
 
 type Point = {id:string; name:string; x:number; y:number};
 type MapConfig = {id:string; name:string; width:number; height:number; points:Point[]};
@@ -7,14 +8,9 @@ type MapConfig = {id:string; name:string; width:number; height:number; points:Po
 export function createMinimap(host:HTMLElement, config:MapConfig, expand:()=>void) {
   const {id,name,width,height,points}=config;
   const radius=width*.014;
-  const terrain=id==='zhaoyao'
-    ? '<path d="M0 0H320Q400 500 280 1500H0Z" fill="#88ada8"/><path d="M1940 570L1600 700 1320 900 1030 850 820 1020 500 1040 280 1100" class="trail-mini-water"/>'
-    : id==='qingqiu'
-      ? '<path d="M980 100C680 300 1100 500 900 820" class="trail-mini-water"/>'
-      : '<path d="M0 500C360 490 470 390 650 460S1000 580 1250 500" class="trail-mini-water"/>';
-  const road=id==='zhaoyao'
-    ? 'M470 1120L870 1110 1120 890 1310 485 1790 510 1930 740'
-    : 'M180 680C230 480 280 320 440 330S950 260 880 530Q900 720 590 710';
+  const world=buildTerrain(id);
+  const terrain=`${id==='zhaoyao'?'<rect width="330" height="1500" fill="#88ada8"/>':''}<polyline points="${world.river.map(p=>p.x+','+p.y).join(' ')}" class="trail-mini-water"/>${world.bridges.map(b=>`<rect x="${b.x-b.w/2}" y="${b.y-b.h/2}" width="${b.w}" height="${b.h}" rx="10" fill="#c8a472"><title>木桥 · 游戏演绎</title></rect>`).join('')}`;
+  const road=id==='zhaoyao'?'M470 1120L870 1110 1230 990 1310 485 1790 510 1930 740':'M180 680L300 490 440 330 850 350 970 550 590 710';
   const el=document.createElement('section');
   el.className='trail-minimap';
   el.setAttribute('aria-label',`${name}实时小地图`);

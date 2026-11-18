@@ -14,6 +14,8 @@
 6. `animal.ts` 展示点击动作；`sound.ts` 按需获取录音、缓存解码结果并管理取消播放。
 7. `assets.ts` 统一加入 Vite BASE_URL，使同一份源代码支持域名根目录和 GitHub 仓库子路径。
 8. `minimap.ts` / `minimap.css` 提供两种场景共用的常驻小地图。SVG 使用各山原始场景坐标和宽高，只更新人物 transform、附近地点与记录状态；不新增独立动画循环或存档键。底图为游戏导航示意。
+9. `navigation.mjs` 的同一河道/桥梁坐标服务渲染、碰撞和寻路；`environment.ts` 生成可复现的树木障碍与静态背景。寻路经桥、检查路径可见性并分段移动，防止大帧时间穿越障碍。
+10. `creatures.ts` 统一五种动物三帧图集、原文特征与观察圈；`observation.ts` 管理观察→原文→证据→笔记；`learning.ts` / `notebook.mjs` 校验个人笔记与回想。新增 `shanhai-evidence-v1` 和 `shanhai-sound-v1` 键，不覆盖旧考察记录。
 
 存档键保持 `shanhai-zhaoyao-v1`、`shanhai-expeditions-v1`，不迁移或清除已有合法记录。存储不可用时不声称已保存。不同浏览器、设备或域名互不共享记录；GitHub Pages 与旧 Sites 域名之间不会自动迁移。
 
@@ -29,6 +31,6 @@ GitHub Pages 使用 `npm run build:pages`（base=/shanhai-fieldbook/），`npm r
 
 ## 维护风险
 
-Phaser 使主脚本约 1.73 MB（gzip 约 404 KB），插画累计体积较大。保留构建警告；低端手机实测前不引入新框架或声称性能已达标。部分源码仍为早期紧凑格式，后续改动时按模块逐步整理，不在本轮大范围重排。
+Phaser 使主脚本约 1.75 MB（gzip 约 413 KB），插画累计体积较大。第二批素材采用无损 WebP、按山加载；sharp 只在开发时转码。保留构建警告；低端手机实测前不声称性能已达标。部分源码仍为早期紧凑格式，后续改动时按模块逐步整理。
 
 回退使用 `git revert <本轮提交>` 并重新发布，避免硬重置覆盖其他人的工作。具体版本和验收见 progress.md；历史美术与实现文档保留原始背景，当前声音以 WORLD_INTERACTION.md 为准。

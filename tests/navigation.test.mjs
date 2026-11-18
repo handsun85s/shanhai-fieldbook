@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {terrain,walkable,findPath,clearLine,moveSafely,nearestWalkable} from '../src/navigation.mjs';
+test('步行不能穿过树干，也不能凭大帧时间越过障碍',()=>{const w=terrain('niuyang');w.obstacles=[{x:180,y:680,r:25}];const result=moveSafely(w,{x:100,y:680},180,0);assert.ok(result.x<=145);assert.ok(walkable(w,result));});
+test('四山的观察区均可寻路抵达，路径各段避开水面',()=>{for(const id of ['zhaoyao','tangting','niuyang','qingqiu']){const w=terrain(id),start=id==='zhaoyao'?{x:470,y:1120}:{x:180,y:680};const goals=id==='zhaoyao'?[[870,1110],[1120,890],[1310,485],[1790,510],[1930,740],[1610,1060]]:[[440,330],[850,500],[590,710],[880,550]];for(const [x,y]of goals){const path=findPath(w,start,{x,y});assert.ok(path.length,`${id} → ${x},${y}`);let from=start;for(const to of path){assert.ok(clearLine(w,from,to),`${id} crosses obstacle`);from=to;}assert.ok(Math.hypot(from.x-x,from.y-y)<100);}}});
+test('桥面可通行，河中旧存档安全移到最近岸边',()=>{const w=terrain('niuyang'),p=w.river[20];assert.equal(walkable(w,p),false);assert.ok(walkable(w,nearestWalkable(w,p)));assert.ok(walkable(w,w.bridges[0]));});

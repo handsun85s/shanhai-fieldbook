@@ -1,0 +1,42 @@
+[
+  {
+    "id": "lushu",
+    "original": "design/clay-v2/lushu.png",
+    "runtime": "public/assets/art-clay-v2/lushu.webp"
+  },
+  {
+    "id": "shengsheng",
+    "original": "design/clay-v2/shengsheng.png",
+    "runtime": "public/assets/art-clay-v2/shengsheng.webp"
+  },
+  {
+    "id": "xuangui",
+    "original": "design/clay-v2/xuangui.png",
+    "runtime": "public/assets/art-clay-v2/xuangui.webp"
+  },
+  {
+    "id": "fox",
+    "original": "design/clay-v2/fox.png",
+    "runtime": "public/assets/art-clay-v2/fox.webp"
+  },
+  {
+    "id": "whiteape",
+    "original": "design/clay-v2/whiteape.png",
+    "runtime": "public/assets/art-clay-v2/whiteape.webp"
+  },
+  {
+    "id": "traveler-walk",
+    "original": "design/clay-v2/traveler-walk.png",
+    "runtime": "public/assets/art-clay-v2/traveler-walk.webp"
+  },
+  {
+    "id": "quartz",
+    "original": "design/clay-v2/quartz.png",
+    "runtime": "public/assets/art-clay-v2/quartz.webp"
+  },
+  {
+    "id": "yanwood",
+    "original": "design/clay-v2/yanwood.png",
+    "runtime": "public/assets/art-clay-v2/yanwood.webp"
+  }
+]
