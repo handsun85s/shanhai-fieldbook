@@ -12,6 +12,7 @@
 - 桌面及手机截图检查：任务面板、小地图、观察按钮和触控方向键无重叠；展开大图、关闭返回可用。浏览器错误日志为空。
 - 手机证据：`verification/minimap-mobile.jpg`。依旧没有真实手机性能测试，本轮只做浏览器尺寸模拟。
 - 不改变原有存档，不新增依赖。发布继续使用现有 GitHub Pages 工作流；对应提交可用 `git log --oneline -- src/minimap.ts` 定位。
+- 已发布实现提交 `5f5430d`；[Actions 44215139182](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/44215139182) 的 build、deploy 均 success。线上刷新后进入招摇，确认“招摇山实时小地图 / 海岸营地”可见；工作区上层 `minimap-live.jpg` 为线上截图。
 
 ## 2026-11-14：按项目创建标准复审
 
