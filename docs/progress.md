@@ -16,6 +16,8 @@
 
 素材原稿及说明：design/clay-v2；提示词：docs/clay-v2-prompts.json；尺寸报告：docs/clay-asset-sizes.json。
 
+发布：实现提交 250a3d6，[Actions 44224598407](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/44224598407) 成功。匿名首页、四张新 WebP 和三个 MP3 均 HTTP 200；线上进入杻阳可见新旋龟、桥梁、小地图。首轮线上验证发现素材加载期间目的地按钮可提前点击，补丁改为加载完成并绑定处理器后才启用，避免无反馈点击；补丁重新通过类型检查与 Pages 构建。
+
 ## 2026-11-18：采用 03 黏土微缩，第一阶段
 
 在公开样片页面核对到“你选了 03 · 黏土微缩 / 已选这个方向”，用户随后明确要求采用。已将这个决定写入 [开发顺序与验收](development-plan.md)。
