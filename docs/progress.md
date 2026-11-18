@@ -12,6 +12,8 @@
 
 390×844：从杻阳小地图直接展开山内图，使用大按钮选旋龟并经桥抵达；从山中手记进入神兽对照，图片和表单可操作。页面宽度 390、弹窗内容宽度 335，无横向溢出。截图 verification/round3-mobile-map.jpg、verification/round3-mobile-comparison.jpg。运行时对照试听与停止均有文本反馈，真实扬声器听感未作结论。
 
+发布实现 b061fe6，[Actions 44234526672](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/44234526672) 的 build/deploy 均成功。线上加载 index-B4rDw4NE.js，与本地最终构建一致；小地图默认显示当前山内，舆图可进入跨山对照，三种神兽插图加载完成、控制台错误为空。公开地址仍为 https://handsun85s.github.io/shanhai-fieldbook/ 。线上截图 verification/round3-live.jpg；验收文档提交使用 skip ci，不改变部署产物。
+
 真实儿童试玩、真实手机性能、现场扬声器及专家审校仍未执行。本轮验证仅说明实现行为符合上述检查，不证明教学效果。
 
 ## 2026-11-18：按开发顺序推进第二批
