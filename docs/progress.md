@@ -18,6 +18,8 @@
 
 发布：实现提交 250a3d6，[Actions 44224598407](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/44224598407) 成功。匿名首页、四张新 WebP 和三个 MP3 均 HTTP 200；线上进入杻阳可见新旋龟、桥梁、小地图。首轮线上验证发现素材加载期间目的地按钮可提前点击，补丁改为加载完成并绑定处理器后才启用，避免无反馈点击；补丁重新通过类型检查与 Pages 构建。
 
+最终修正版 1a8fc26，[Actions 44224927570](https://github.com/handsun85s/shanhai-fieldbook/actions/runs/44224927570) 成功。线上加载 index-C7rYqbot.js，与本地最终构建一致；首次进入后点击鹿蜀目的地成功启动，经桥抵达“鹿蜀 · 停步观察”，控制台错误为空。截图 verification/clay-v2-live.jpg。公开地址保持 https://handsun85s.github.io/shanhai-fieldbook/ 。随后验收文档提交使用 skip ci，不改变网页产物。
+
 ## 2026-11-18：采用 03 黏土微缩，第一阶段
 
 在公开样片页面核对到“你选了 03 · 黏土微缩 / 已选这个方向”，用户随后明确要求采用。已将这个决定写入 [开发顺序与验收](development-plan.md)。
