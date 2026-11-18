@@ -2,6 +2,15 @@
 :root{--paper:#fff5df;--ink:#354d42;--muted:#737d66;--rust:#ac5a3c;--line:#d6c4a2;background:#e9dfc5;color:var(--ink)}
 body{background:#e9dfc5}
 header{background:linear-gradient(#fff9e9,#f2e5cc);border-bottom:3px solid #d6c4a4;box-shadow:0 4px 18px #403b2920}
+header .brand > span:last-child, header .chapter, header nav, header .sound-controls label { white-space: nowrap; }
+@media (max-width: 1240px) {
+  header .chapter { display: none; }
+}
+@media (min-width: 601px) and (max-width: 840px) {
+  header { padding-inline: 14px; }
+  header nav { gap: 5px; }
+  header nav button { padding-inline: 8px; }
+}
 .brand{letter-spacing:2px}.brand small{letter-spacing:1px}.seal{border-radius:12px;background:#b86645;border:2px solid #df9972;box-shadow:inset 0 2px 2px #f5c69d80,0 3px 0 #814e36;transform:rotate(-5deg)}
 nav button,#world-btn,#sound-btn,#pause-btn{border:1px solid #d4c5aa;border-radius:12px;background:linear-gradient(#fffaf0,#f2e6cf);box-shadow:inset 0 1px #fff,0 3px 0 #d6c5a5;color:#425747}
 button:active{filter:brightness(.96)}
@@ -21,9 +30,49 @@ button:active{filter:brightness(.96)}
 #expedition{background:#f7edd7}.exp-hud{background:linear-gradient(#fff9eb,#f0e2c6);border-bottom:3px solid #d6c5a5}.exp-bottom{background:#f5ead3}.exp-top small{color:#8d7454}
 .mountain-cards>button{border-radius:24px;background:radial-gradient(ellipse at 50% 40%,#fffaec,#e7dfc1);border:1px solid #cdbd9b;box-shadow:inset 0 2px #fffdf4,0 6px 0 #c7b79350}.mountain-cards h2{font-family:'Microsoft YaHei',sans-serif;font-weight:700}.mountain-cards img{filter:drop-shadow(0 12px 8px #59724f26)}
 .world-viewport,.world-location,.world-controls{border-radius:16px}.world-viewport{border:2px solid #cdbf9d;background:#e9e2c9}.world-controls{overflow:hidden}.world-location{background:#eee4ca}
-#overlay.intro-overlay{background:linear-gradient(90deg,#f6ecd9fa 0%,#f5ead6eb 44%,#e8e0bc42 100%)}
 .intro{position:relative;z-index:1}.intro-title{color:#3b5d48;text-shadow:0 3px #d8caa7;letter-spacing:5px}.intro-title i{border-radius:9px;background:#b56d4d;box-shadow:0 3px 0 #80583f}.intro-sub{color:#956847;font-weight:700}.intro-meta{color:#65795a}.intro-note{color:#6b725f}
-.clay-intro-art{position:absolute;right:6%;bottom:8%;width:44%;height:80%;pointer-events:none}.clay-intro-art .clay-tree{width:100%;height:100%;object-fit:contain;filter:drop-shadow(15px 22px 13px #3c563335)}.clay-intro-art .clay-person{position:absolute;bottom:0;left:2%;height:48%;filter:drop-shadow(8px 9px 4px #3c563335)}
 #loading{background:radial-gradient(ellipse,#fff7e5,#dddcc0)}#loading strong{font-family:'Microsoft YaHei',sans-serif}.clay-note{font-size:11px!important;line-height:1.7;color:#7e765d!important}
+#overlay.intro-overlay {
+  isolation: isolate;
+  background: #efe8d8;
+}
+.clay-intro-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.coast-panorama {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 67% 55%;
+}
+.clay-intro-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #fcf5e5f7 0%, #fcf5e5e8 21%, #fbf2dfc9 33%, #fbf2df35 52%, transparent 65%);
+}
+.intro p, .intro .intro-note, .intro .intro-meta { color: #485a47; }
+@media (max-width: 700px) {
+  #overlay.intro-overlay {
+    display: block;
+    padding: 0;
+  }
+  .clay-intro-art { position: relative; height: clamp(140px, 31dvh, 290px); }
+  .coast-panorama { object-position: 78% 58%; }
+  .clay-intro-art::after { background: linear-gradient(0deg,#f7eddb,transparent 27%); }
+  #overlay.intro-overlay .intro {
+    width: 100%;
+    padding: 6px 7% 22px;
+    background: linear-gradient(#f7eddb,#fcf5e7);
+  }
+  .intro .intro-title { display: flex; gap: 3px; font-size: clamp(42px, 11vw, 65px); margin: 12px 0 8px; }
+  .intro .intro-title i { margin-top: 2px; margin-left: 3px; }
+  .intro .intro-sub { margin: 12px 0; }
+  .intro .intro-note { margin-top: 15px; }
+}
 @media(max-width:700px){.quest,.exp-task,.trail-minimap{border-radius:16px}.trail-minimap svg{border-radius:8px}.exp-hud button{border-radius:10px}.dialog,.art-detail,.exp-dialog,.world-atlas,aside{border-radius:18px}}
-@media(max-width:600px){.clay-intro-art{right:-4%;bottom:10%;width:62%;height:54%;opacity:.32}#overlay.intro-overlay{background:#f4ebd8e8}.intro-note{max-width:270px}.touch-controls button{border-radius:12px}}
+@media(max-width:600px){.intro-note{max-width:270px}.touch-controls button{border-radius:12px}}

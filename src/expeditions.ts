@@ -1,5 +1,7 @@
 import {openComparison,comparisonOpen} from './comparison';
 import {createMinimap} from './minimap';
+import {fieldLabel, footAnchor, groundShadow, groveShape, scenePixelRatio} from './scene-props';
+import {groundSpecimensURL, paintGroundSpecimens} from './ground-specimens';
 import {assetPath} from './assets';
 import {clayArt,travelerHeight} from './clay';
 import {mountains,type Mountain,type Observation} from './mountains';
@@ -51,21 +53,99 @@ async function enter(m:Mountain){
  root.querySelectorAll<HTMLButtonElement>('[data-key]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(b.dataset.key!);};b.onpointerup=b.onpointercancel=b.onlostpointercapture=()=>keys.delete(b.dataset.key!);});
  const mini=createMinimap($('.exp-field'),{id:m.id,name:m.name,width:world.width,height:world.height,points:m.points},()=>{stop();openWorldMap('local');});
  const travelerURL=assetPath(creatureFolder+'traveler-walk.webp');const urls=[travelerURL,...props.map(p=>p.url),...m.points.map(p=>creature(p.id)?creatureURL(p.id):p.image)];
- try{await Promise.all([...new Set(urls)].map(loadPicture));}catch{if(generation!==loadGeneration)return;$('.exp-load').innerHTML='<h2>有些素材还没加载好</h2><p>检查网络后重试，记录不会丢失。</p><button id="exp-retry">重新加载</button>';$('#exp-retry').onclick=()=>void enter(m);return;}
+ const decorativeSheet = loadPicture(groundSpecimensURL).catch(() => null);
+ try {
+   await Promise.all([...new Set(urls)].map(loadPicture));
+ } catch {
+   if(generation!==loadGeneration)return;
+   $('.exp-load').innerHTML='<h2>有些素材还没加载好</h2><p>检查网络后重试，记录不会丢失。</p><button id="exp-retry">重新加载</button>';
+   $('#exp-retry').onclick=()=>void enter(m);
+   return;
+ }
  if(generation!==loadGeneration)return;$('.exp-load').hidden=true;
- const backdrop=document.createElement('canvas');backdrop.width=world.width;backdrop.height=world.height;paintTerrain(backdrop.getContext('2d')!,world,m.color);
- const canvas=$<HTMLCanvasElement>('canvas'),c=canvas.getContext('2d')!;let camera={x:0,y:0,zoom:1},last=0,lastHUD=0,facing=1;
+ const backdrop = document.createElement('canvas');
+ backdrop.width = world.width;
+ backdrop.height = world.height;
+ const ground = backdrop.getContext('2d')!;
+ type SceneObject = {
+   id:string; x:number; y:number; height:number; image:HTMLImageElement;
+   frames:number; flip:boolean; widthScale:number;
+ };
+ const objects: SceneObject[] = props.map(prop=>{
+   const id=prop.url.endsWith('yanwood.webp')?'yanwood':'grove';
+   const shape=id==='grove'?groveShape(prop.x,prop.y):{flip:false,width:1};
+   return {id, x:prop.x, y:prop.y, height:prop.height, image:pictures.get(prop.url)!,
+     frames:1, flip:shape.flip, widthScale:shape.width};
+ });
+ for(const point of m.points) {
+   const animal=creature(point.id);
+   const isWater=point.id==='east'||point.id==='south';
+   objects.push({id:point.id, x:point.x, y:point.y, height:isWater ? 97 : point.id==='fox' ? 220 : 200,
+     image:pictures.get(animal?creatureURL(point.id):point.image)!, frames:animal?3:1,
+     flip:false, widthScale:1});
+ }
+ objects.sort((a,b)=>a.y-b.y);
+ const labels=m.points.map(p=>({point:p, unseen:fieldLabel(p.name,false), seen:fieldLabel(p.name,true)}));
+ const paintGround=(sheet:HTMLImageElement|null)=>{
+   paintTerrain(ground,world,m.color);
+   if(sheet)paintGroundSpecimens(ground,world,sheet,m.points);
+   for(const item of objects) {
+     const width=item.height*item.image.naturalWidth/(item.image.naturalHeight*item.frames);
+     groundShadow(ground,item.x,item.y,width*.57*item.widthScale);
+   }
+ };
+ // Prepare the playable map even on a slow connection, then bake the extra relief once available.
+ const cachedSheet=pictures.get(groundSpecimensURL);
+ paintGround(cachedSheet??null);
+ if(!cachedSheet)void decorativeSheet.then(sheet=>{
+   if(sheet&&generation===loadGeneration)paintGround(sheet);
+ });
+ const avatar=pictures.get(travelerURL)!;
+ const canvas=$<HTMLCanvasElement>('canvas'),c=canvas.getContext('2d')!;
+ let camera={x:0,y:0,zoom:1},last=0,lastHUD=0,facing=1;
  const walk=(destination:{x:number;y:number})=>{route=findPath(world,{x,y},destination);$('#exp-save').textContent=!storageOK?'无法保存 · 请勿关闭页面':route.length?'已规划路线 · 会从桥上过河':'这里暂时走不到，试试附近的地面。';};
  walkToPoint=name=>{const p=m.points.find(p=>p.name===name);if(p)walk({x:p.x,y:p.y+70});};
  root.querySelectorAll<HTMLButtonElement>('[data-walk]').forEach(b=>{b.disabled=false;b.onclick=()=>{const p=m.points.find(p=>p.id===b.dataset.walk)!;walk({x:p.x,y:p.y+70});};});
  canvas.onclick=e=>{if(dialog.open||worldMapOpen||comparisonOpen()||recallOpen())return;const r=canvas.getBoundingClientRect();walk({x:(e.clientX-r.left)/camera.zoom+camera.x,y:(e.clientY-r.top)/camera.zoom+camera.y});};
- const draw=(time:number)=>{if(generation!==loadGeneration)return;raf=requestAnimationFrame(draw);if(time-last<32)return;const dt=Math.min(.05,last?(time-last)/1000:0);last=time;if(document.hidden)return;const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,devicePixelRatio||1);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}const z=Math.max(w<600?.8:1,w/world.width,h/world.height);camera={x:Math.max(0,Math.min(world.width-w/z,x-w/z/2)),y:Math.max(0,Math.min(world.height-h/z,y-h/z*.62)),zoom:z};
+ const draw=(time:number)=>{
+ if(generation!==loadGeneration)return;
+ raf=requestAnimationFrame(draw);
+ if(time-last<32)return;
+ const dt=Math.min(.05,last?(time-last)/1000:0);last=time;
+ if(document.hidden)return;
+ const w=canvas.clientWidth,h=canvas.clientHeight,dpr=scenePixelRatio(w,h);
+ const width=Math.round(w*dpr),height=Math.round(h*dpr);
+ if(canvas.width!==width || canvas.height!==height){canvas.width=width;canvas.height=height;}
+ const z=Math.max(w<600?.8:1,w/world.width,h/world.height);
+ camera={x:Math.max(0,Math.min(world.width-w/z,x-w/z/2)),y:Math.max(0,Math.min(world.height-h/z,y-h/z*.62)),zoom:z};
  let moving=false;if(!dialog.open&&!worldMapOpen&&!comparisonOpen()&&!recallOpen()){let dx=Number(keys.has('arrowright')||keys.has('d'))-Number(keys.has('arrowleft')||keys.has('a')),dy=Number(keys.has('arrowdown')||keys.has('s'))-Number(keys.has('arrowup')||keys.has('w'));if(dx||dy)route=[];else if(route.length){dx=route[0].x-x;dy=route[0].y-y;if(Math.hypot(dx,dy)<5){route.shift();dx=dy=0;}}const len=Math.hypot(dx,dy);if(len){const distance=Math.min(200*dt,route.length?len:200*dt),next=moveSafely(world,{x,y},dx/len*distance,dy/len*distance);moving=Math.hypot(next.x-x,next.y-y)>.1;if(dx)facing=dx<0?-1:1;x=next.x;y=next.y;}}
  c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle=m.color;c.fillRect(0,0,w,h);c.save();c.scale(z,z);c.translate(-camera.x,-camera.y);c.drawImage(backdrop,0,0);const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;paintFlow(c,world,time,reduced);
  if(route.length){c.strokeStyle='#fff9db';c.setLineDash([5,9]);c.lineWidth=2;c.beginPath();c.moveTo(x,y);route.forEach(p=>c.lineTo(p.x,p.y));c.stroke();c.setLineDash([]);}
- const objects=[...props.map(p=>({...p,id:'',frame:0,flip:false,frames:1})),...m.points.map(p=>({x:p.x,y:p.y,height:p.id==='fox'?220:200,url:creature(p.id)?creatureURL(p.id):p.image,radius:0,id:p.id,frame:!reduced&&creature(p.id)&&Math.hypot(x-p.x,y-p.y)<240&&time%7000<1900?1+Math.floor(time/300)%2:0,flip:false,frames:creature(p.id)?3:1})),{x,y,height:travelerHeight,url:travelerURL,radius:0,id:'player',frame:moving&&!reduced?[0,1,0,2][Math.floor(time/150)%4]:0,flip:facing<0,frames:3}];
- for(const o of objects.sort((a,b)=>a.y-b.y)){if(o.x<camera.x-250||o.x>camera.x+w/z+250||o.y<camera.y-10||o.y>camera.y+h/z+300)continue;const img=pictures.get(o.url)!;const width=o.height*(img.naturalWidth/o.frames)/img.naturalHeight;const behind=o.id!=='player'&&y<o.y&&y>o.y-o.height&&Math.abs(x-o.x)<width*.4;c.globalAlpha=behind?.35:1;c.fillStyle='#36523e22';c.beginPath();c.ellipse(o.x,o.y-2,o.id==='player'?24:width*.25,8,0,0,7);c.fill();drawFrame(c,img,o.x,o.y,o.height,o.frame,o.flip,o.frames);}c.globalAlpha=1;
- for(const p of m.points){c.fillStyle=progress[m.id].includes(p.id)?'#587856':'#fff6dc';c.beginPath();c.arc(p.x,p.y+30,12,0,7);c.fill();c.fillStyle='#fff6ddee';c.beginPath();c.roundRect(p.x-60,p.y+47,120,28,7);c.fill();c.fillStyle='#375440';c.textAlign='center';c.font='14px Microsoft YaHei';c.fillText(p.name,p.x,p.y+66);}c.restore();
+ const pose = moving && !reduced ? [0,1,0,2][Math.floor(time/150)%4] : 0;
+ groundShadow(c,x,y,65);
+ const drawPlayer=()=>drawFrame(c,avatar,x,y+travelerHeight*(1-footAnchor('player')),
+   travelerHeight,pose,facing<0,3);
+ let drewPlayer=false;
+ for(const obj of objects) {
+   if(!drewPlayer&&y<obj.y){drawPlayer();drewPlayer=true;}
+   if(obj.x<camera.x-250||obj.x>camera.x+w/z+250||obj.y<camera.y-10||obj.y>camera.y+h/z+300)continue;
+   const width=obj.height*obj.image.naturalWidth/(obj.frames*obj.image.naturalHeight);
+   const behind=y<obj.y&&y>obj.y-obj.height&&Math.abs(x-obj.x)<width*obj.widthScale*.4;
+   const frame=obj.frames===3 && !reduced && Math.hypot(x-obj.x,y-obj.y)<240 && time%7000<1900
+     ? 1+Math.floor(time/300)%2 : 0;
+   c.save();
+   c.globalAlpha=behind ? .38 : 1;
+   c.translate(obj.x,obj.y);
+   c.scale(obj.widthScale,1);
+   drawFrame(c,obj.image,0,obj.height*(1-footAnchor(obj.id)),obj.height,frame,obj.flip,obj.frames);
+   c.restore();
+ }
+ if(!drewPlayer)drawPlayer();
+ for(const {point,unseen,seen} of labels) {
+   const plate=progress[m.id].includes(point.id)?seen:unseen;
+   c.drawImage(plate,point.x-plate.width/4,point.y+83,plate.width/2,plate.height/2);
+ }
+ c.restore();
  if(time-lastHUD>100){lastHUD=time;const near=m.points.find(p=>Math.hypot(x-p.x,y-(p.y+60))<100),area=near?.name??'山间小径';setWorldLocation({id:m.id,name:m.name,area,x,y,width:world.width,height:world.height,points:m.points});mini.update(x,y,area,progress[m.id]);mini.element.hidden=dialog.open||worldMapOpen||comparisonOpen()||recallOpen();const button=$<HTMLButtonElement>('#exp-observe');button.hidden=!near||dialog.open||worldMapOpen||comparisonOpen()||recallOpen();if(near){button.textContent=`${near.name} · ${progress[m.id].includes(near.id)?'重温':'停步观察'} [E]`;button.onclick=()=>observe(near);}$('#exp-count').textContent=`已记录 ${progress[m.id].length} / ${m.points.length}${progress[m.id].length===m.points.length?' · 可以开始回想':''}`;}
  };raf=requestAnimationFrame(draw);canvas.focus();
 }

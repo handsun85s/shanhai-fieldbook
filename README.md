@@ -4,7 +4,7 @@
 
 [直接打开游戏](https://handsun85s.github.io/shanhai-fieldbook/) · [公开源码](https://github.com/handsun85s/shanhai-fieldbook)
 
-已采用 **03 · 黏土微缩**。五种动物、行走人物、水玉和棪木已统一素材；四山加入桥梁寻路、碰撞、特征观察、原文证据、个人笔记与山行回想。动作使用三帧姿态，地形仍可继续精修。见 [开发步骤与验收](docs/development-plan.md) 和 [真实试玩方案](docs/child-playtest.md)。
+已采用 **03 · 黏土微缩**。四山的步道经过木桥，河岸可见湿石和芦苇，林地散布蕨叶与苔石。打开五种动物的观察卡，点击特征即可放大原画中的对应部位，核对原文后可将发现记入手记。见 [开发步骤与验收](docs/development-plan.md) 和 [真实试玩方案](docs/child-playtest.md)。
 
 [四种视觉风格试玩](https://handsun85s.github.io/shanhai-fieldbook/playground.html)：清新动画、复古像素、黏土微缩、立体剪纸。独立样片，可探索、并排比较和保存选择；不改变正式游戏。范围、素材和生成提示见 [风格样片记录](docs/style-lab.md)。
 
