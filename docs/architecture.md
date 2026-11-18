@@ -16,6 +16,8 @@
 8. `minimap.ts` / `minimap.css` 提供两种场景共用的常驻小地图。SVG 使用各山原始场景坐标和宽高，只更新人物 transform、附近地点与记录状态；不新增独立动画循环或存档键。底图为游戏导航示意。
 9. `navigation.mjs` 的同一河道/桥梁坐标服务渲染、碰撞和寻路；`environment.ts` 生成可复现的树木障碍与静态背景。寻路经桥、检查路径可见性并分段移动，防止大帧时间穿越障碍。
 10. `creatures.ts` 统一五种动物三帧图集、原文特征与观察圈；`observation.ts` 管理观察→原文→证据→笔记；`learning.ts` / `notebook.mjs` 校验个人笔记与回想。新增 `shanhai-evidence-v1` 和 `shanhai-sound-v1` 键，不覆盖旧考察记录。
+11. `comparison-data.mjs` 提供三项跨山对照及完整性校验；`comparison.ts` 处理选择、逐条反馈、独占试听与键盘焦点。使用 `shanhai-comparison-v1` 保存部分选择，恢复时重新验证完成条件，不改写考察记录。
+12. `local-map.ts` 将 `navigation.mjs` 河道与桥梁投影到全图的山内层；小地图默认打开该层。地图选点在原生 dialog 的 close 事件完成停步处理后才派发 `localmaptravel`，避免新路线被关闭清理取消；两个场景分别接收并使用现有寻路器。
 
 存档键保持 `shanhai-zhaoyao-v1`、`shanhai-expeditions-v1`，不迁移或清除已有合法记录。存储不可用时不声称已保存。不同浏览器、设备或域名互不共享记录；GitHub Pages 与旧 Sites 域名之间不会自动迁移。
 
