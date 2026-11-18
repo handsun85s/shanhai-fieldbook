@@ -223,7 +223,7 @@ export function mountBookField(host:HTMLElement, opts:FieldOptions):()=>void {
   locate.addEventListener('click',()=>{
     if(mapOpen||arrived)return;
     mapOpen=true;keys.clear();cancelAnimationFrame(frame);frame=0;last=0;
-    const context=passage?`第 ${passage.index+1} 段 · ${opts.place}`:opts.place;
+    const context=passage?`第 ${passage.index+1} 段`+(/^第\d+段观察处$/.test(opts.place)?'':' · '+opts.place):opts.place;
     const local=at('study')?place:at('lookout')?lookout:landscapes[biome].name;
     openBookLocator(volume,context+' / '+local);
   },listen);

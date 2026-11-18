@@ -8,6 +8,7 @@
 - 首段五个新站均实际完成两项任务。猿翼刷新保留山印，亶爰可凭文字完成遥察，柢山图版可近看鯥的侧翼和尾。
 - 全书检索“精卫”能进入《北山经》第 65 段，从发鸠小径回到原句并收录。检索“赤鱬”可在青丘段展开水中补记。两种字形下的 868 道复原题均逐一通过规则检查。
 - 浏览器手机尺寸实测 390×844。真实儿童独立游玩与学习效果、真实手机性能仍待用户试玩。
+- 公开版已从[发鸠山入口](https://handsun85s.github.io/shanhai-fieldbook/journey.html?volume=3)实走至[精卫观察页](../verification/eighteen-volume-live-jingwei.jpg)。十八卷数据、雷声和两项图像素材共 21 个线上文件的 SHA-256 与本地构建一致。[手机全书定位实景](../verification/eighteen-volume-mobile-location.jpg)
 
 ## 2026-11-18：第三批，跨山联系与地图操作
 
