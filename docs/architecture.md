@@ -13,6 +13,7 @@
 5. `worldmap.ts` 取场景实际位置，结合 `world-data.mjs` 展示方位、路线与局部坐标。
 6. `animal.ts` 展示点击动作；`sound.ts` 按需获取录音、缓存解码结果并管理取消播放。
 7. `assets.ts` 统一加入 Vite BASE_URL，使同一份源代码支持域名根目录和 GitHub 仓库子路径。
+8. `minimap.ts` / `minimap.css` 提供两种场景共用的常驻小地图。SVG 使用各山原始场景坐标和宽高，只更新人物 transform、附近地点与记录状态；不新增独立动画循环或存档键。底图为游戏导航示意。
 
 存档键保持 `shanhai-zhaoyao-v1`、`shanhai-expeditions-v1`，不迁移或清除已有合法记录。存储不可用时不声称已保存。不同浏览器、设备或域名互不共享记录；GitHub Pages 与旧 Sites 域名之间不会自动迁移。
 

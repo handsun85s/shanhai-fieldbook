@@ -1,3 +1,4 @@
+import {createMinimap} from './minimap';
 import * as Phaser from 'phaser';
 import './style.css';
 import {sound} from './sound';
@@ -32,6 +33,7 @@ app.innerHTML=`
 <div class="map-zoom" aria-label="地图缩放"><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-level">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div><div id="loading" role="status"><span class="eyebrow">山海行记 · 绘卷将启</span><strong>正在铺开山川草木…</strong><span id="loading-progress">0%</span></div><div id="overlay" hidden></div>
 </main>`;
 
+const trailMini=createMinimap($('#stage'),{id:'zhaoyao',name:'招摇山',width:2400,height:1500,points:spots},()=>{scene?.stop();openWorldMap();});
 $('#save-status').textContent=storageOK?'进度保存在此浏览器':'当前无法保存 · 请勿关闭页面';
 $('#world-btn').onclick=()=>{scene?.stop();openWorldMap();};
 document.addEventListener('worldmapclose',()=>scene?.stop());
@@ -167,6 +169,8 @@ update(time:number,delta:number){if(!this.player)return;const dt=Math.min(delta,
  const target=spots.find(s=>s.id===targetId);if(target){const cam=this.cameras.main,dist=Math.hypot(target.x-this.player.x,target.y-this.player.y),angle=Math.atan2(target.y-this.player.y,target.x-this.player.x);this.targetText.setPosition(this.player.x+Math.cos(angle)*120,this.player.y+Math.sin(angle)*120-40);this.targetText.setText(`${target.name} ${dist<105?'· 已到达':['→','↘','↓','↙','←','↖','↑','↗'][(Math.round(angle/(Math.PI/4))+8)%8]}`);this.targetText.setVisible(!blocked);if(dist<70){targetId='';this.targetMark.clear();this.targetText.setVisible(false);}void cam;}
  if(!expeditionOpen)setWorldLocation({id:'zhaoyao',name:'招摇山',area:this.near?.name??(this.player.x<650?'西海岸 · 招摇山麓':this.player.x>1650?'深林 · 狌狌出没处':this.player.y<700?'山中 · 迷榖古木':'溪谷 · 循水小径'),x:this.player.x,y:this.player.y,width:2400,height:1500,points:spots});
  $('#location').textContent=this.player.x<650?'西海岸 · 招摇山麓':this.player.x>1650?'深林 · 狌狌出没处':this.player.y<700?'山中 · 迷榖古木':'溪谷 · 循水小径';
+ trailMini.element.hidden=modal||paused||journal||mapOpen||artDialog.open||expeditionOpen||worldMapOpen||!state.started;
+ if(!expeditionOpen)trailMini.update(this.player.x,this.player.y,this.near?.name??$('#location').textContent!,state.facts);
  if(time-this.lastSave>4500&&!blocked){persist();this.lastSave=time;}
 }
 }

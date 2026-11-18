@@ -1,0 +1,11 @@
+.trail-minimap{position:absolute;top:24px;right:24px;width:216px;padding:12px;background:#f5efdfed;border:1px solid #bfc8ac;box-shadow:0 5px 24px #304d381a;z-index:3;color:#385b48;border-radius:4px}
+.trail-mini-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px}.trail-mini-heading strong{font:17px 'SimSun',serif}
+.trail-minimap svg{display:block;width:100%;border:1px solid #adb99d;border-radius:2px;overflow:hidden}
+.trail-mini-water{fill:none;stroke:#88ada8;stroke-width:4%;stroke-linecap:round}
+.trail-mini-point circle{fill:#faf4de;stroke:#486d50;stroke-width:1%}.trail-mini-point.recorded circle{fill:#486d50}.trail-mini-point text{fill:#365a45;font-family:sans-serif;paint-order:stroke;stroke:#f4edd8;stroke-width:8px;stroke-linejoin:round}
+.trail-mini-legend{display:flex;justify-content:space-between;gap:4px;margin-top:8px;font-size:10px;white-space:nowrap}.trail-mini-legend span+span{color:#486d50}
+.trail-mini-area{margin:7px 0 0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trail-minimap>button{display:block;width:100%;text-align:right;margin-top:6px;padding:5px 0;border-top:1px solid #cdd0b8;font-size:11px}
+#stage>.compass,.exp-field>.exp-direction{display:none}#stage>#guide-btn{top:292px}
+@media(max-width:700px){.trail-minimap{top:12px;right:12px;width:136px;padding:8px}.trail-mini-heading{margin-bottom:5px;font-size:10px}.trail-mini-heading strong{font-size:14px}.trail-mini-legend{flex-direction:column;gap:2px;font-size:9px;margin-top:5px}.trail-mini-area{font-size:10px;margin-top:5px}.trail-minimap>button{font-size:10px;padding:4px 0;margin-top:5px}#expedition .exp-task{width:calc(100% - 172px);max-width:205px}#stage>#guide-btn{top:222px}}
+@media(max-width:600px){#stage>.quest{width:calc(100% - 172px);max-width:218px}#stage>.quest h1{font-size:17px}#stage .quest-foot{flex-wrap:wrap;gap:5px}}
