@@ -4,6 +4,8 @@
 
 [直接打开游戏](https://handsun85s.github.io/shanhai-fieldbook/) · [公开源码](https://github.com/handsun85s/shanhai-fieldbook)
 
+已采用 **03 · 黏土微缩**。第一阶段更新共用界面、人物、树木草石与基础遮挡；动物重制及完整微缩地形仍待后续。见 [接下来开发步骤与验收](docs/development-plan.md)。
+
 [四种视觉风格试玩](https://handsun85s.github.io/shanhai-fieldbook/playground.html)：清新动画、复古像素、黏土微缩、立体剪纸。独立样片，可探索、并排比较和保存选择；不改变正式游戏。范围、素材和生成提示见 [风格样片记录](docs/style-lab.md)。
 
 手机或电脑浏览器均可打开，无需 GitHub 登录。换设备、浏览器或从旧站点切换到此域名时，记录不会自动同步；收藏上面的游戏链接即可再次访问。

@@ -1,5 +1,6 @@
 import {createMinimap} from './minimap';
 import {assetPath} from './assets';
+import {paintClayGround,travelerHeight,clayArt} from './clay';
 import {mountains, type Mountain,type Observation} from './mountains';
 import {restoreExp,addObservation,EXP_KEY} from './expedition-progress.mjs';
 import {sound} from './sound';
@@ -32,13 +33,13 @@ const canvas=root.querySelector('canvas')!,c=canvas.getContext('2d')!;let camera
 const draw=(time:number)=>{if(!mountain)return;const dt=Math.min(.05,last?(time-last)/1000:0);last=time;const w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}const z=Math.max(w<600?.65:.95,w/1200,h/800);camera={x:Math.max(0,Math.min(1200-w/z,x-w/z/2)),y:Math.max(0,Math.min(800-h/z,y-h/z/2)),zoom:z};
 if(!dialog.open&&!document.hidden&&!worldMapOpen){let dx=Number(keys.has('arrowright')||keys.has('d'))-Number(keys.has('arrowleft')||keys.has('a')),dy=Number(keys.has('arrowdown')||keys.has('s'))-Number(keys.has('arrowup')||keys.has('w'));if(dx||dy)target=null;else if(target){dx=target.x-x;dy=target.y-y;if(Math.hypot(dx,dy)<5){target=null;dx=dy=0;}}const len=Math.hypot(dx,dy);if(len){x=Math.max(70,Math.min(1130,x+dx/len*200*dt));y=Math.max(120,Math.min(750,y+dy/len*200*dt));}}
 c.fillStyle=m.color;c.fillRect(0,0,w,h);c.save();c.scale(z,z);c.translate(-camera.x,-camera.y);
-const grad=c.createLinearGradient(0,0,0,800);grad.addColorStop(0,'#54796c');grad.addColorStop(.5,m.color);grad.addColorStop(1,'#e0d7b8');c.fillStyle=grad;c.fillRect(0,0,1200,800);
-c.strokeStyle='#e5d7b5';c.lineWidth=35;c.lineCap='round';c.beginPath();c.moveTo(180,680);c.bezierCurveTo(230,480,280,320,440,330);c.bezierCurveTo(610,250,950,260,880,530);c.quadraticCurveTo(900,720,590,710);c.stroke();
+const grad=c.createLinearGradient(0,0,0,800);grad.addColorStop(0,'#54796c');grad.addColorStop(.5,m.color);grad.addColorStop(1,'#e0d7b8');c.fillStyle=grad;c.fillRect(0,0,1200,800);paintClayGround(c,1200,800,m.color);
+c.save();c.shadowColor='#5c684650';c.shadowBlur=8;c.shadowOffsetY=5;c.strokeStyle='#e4cda0';c.lineWidth=35;c.lineCap='round';c.beginPath();c.moveTo(180,680);c.bezierCurveTo(230,480,280,320,440,330);c.bezierCurveTo(610,250,950,260,880,530);c.quadraticCurveTo(900,720,590,710);c.stroke();c.restore();
 c.strokeStyle='#79a7a2';c.lineWidth=48;c.beginPath();if(m.id==='qingqiu'){c.moveTo(980,100);c.bezierCurveTo(680,300,1100,500,900,820);}else{c.moveTo(0,500);c.bezierCurveTo(360,490,470,390,650,460);c.bezierCurveTo(900,580,1000,580,1250,500);}c.stroke();c.strokeStyle='#d6e7d3';c.lineWidth=2;c.setLineDash([8,65]);c.lineDashOffset=-time/140;c.stroke();c.setLineDash([]);
-const image=(url:string,px:number,py:number,height:number)=>{const p=pic(url);if(p.complete&&p.naturalWidth){const width=height*p.naturalWidth/p.naturalHeight;c.drawImage(p,px-width/2,py-height,width,height);}};
-for(let i=0;i<25;i++){const tx=70+(i*239)%1100,ty=230+(i*151)%560;if(m.points.some(p=>Math.hypot(p.x-tx,p.y-ty)<180))continue;image(assetPath('art-v2/grove.png'),tx,ty,180+(i%3)*30);}
+const objects:{url:string;px:number;py:number;height:number}[]=[];const image=(url:string,px:number,py:number,height:number)=>{objects.push({url,px,py,height});};
+for(let i=0;i<25;i++){const tx=70+(i*239)%1100,ty=230+(i*151)%560;if(m.points.some(p=>Math.hypot(p.x-tx,p.y-ty)<180))continue;image(assetPath(clayArt+'grove.png'),tx,ty,180+(i%3)*30);}
 for(const p of m.points){image(p.image,p.x,p.y,p.id==='fox'?220:190);c.fillStyle=progress[m.id].includes(p.id)?'#496c4e':'#f6efdb';c.beginPath();c.arc(p.x,p.y+30,13,0,Math.PI*2);c.fill();c.fillStyle='#f5efdf';c.fillRect(p.x-55,p.y+47,110,27);c.fillStyle='#345546';c.textAlign='center';c.font='15px Microsoft YaHei';c.fillText(p.name,p.x,p.y+66);}
-image(assetPath('art-v2/traveler.png'),x,y,100);if(target){c.strokeStyle='#fff2bd';c.lineWidth=3;c.beginPath();c.arc(target.x,target.y,12,0,Math.PI*2);c.stroke();}c.restore();
+c.fillStyle='#3a553b33';c.beginPath();c.ellipse(x,y-2,28,10,0,0,Math.PI*2);c.fill();image(assetPath(clayArt+'traveler.png'),x,y,travelerHeight);for(const o of objects.sort((a,b)=>a.py-b.py)){const p=pic(o.url);if(!p.complete||!p.naturalWidth)continue;const width=o.height*p.naturalWidth/p.naturalHeight;const behind=o.url!==assetPath(clayArt+'traveler.png')&&y<o.py&&y>o.py-o.height&&Math.abs(x-o.px)<width*.4;c.globalAlpha=behind?.36:1;c.drawImage(p,o.px-width/2,o.py-o.height,width,o.height);}c.globalAlpha=1;if(target){c.strokeStyle='#fff2bd';c.lineWidth=3;c.beginPath();c.arc(target.x,target.y,12,0,Math.PI*2);c.stroke();}c.restore();
 setWorldLocation({id:m.id,name:m.name,area:m.points.find(p=>Math.hypot(x-p.x,y-(p.y+55))<120)?.name??'山间小径',x,y,width:1200,height:800,points:m.points});
 mini.update(x,y,m.points.find(p=>Math.hypot(x-p.x,y-(p.y+55))<120)?.name??'山间小径',progress[m.id]);
 const near=m.points.find(p=>Math.hypot(x-p.x,y-(p.y+55))<100);const b=root.querySelector<HTMLButtonElement>('#exp-observe')!;b.hidden=!near||dialog.open;if(near){b.textContent=`${near.name} · ${progress[m.id].includes(near.id)?'重温':'停步观察'} [E]`;b.onclick=()=>observe(near);}

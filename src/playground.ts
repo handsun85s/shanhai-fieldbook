@@ -37,7 +37,7 @@ root.innerHTML=`<header class="lab-header"><a class="lab-brand" href="./"><span 
 <div class="destination" hidden></div><div class="scene-caption">点击地面漫游 · 点击光标观察</div></div>
 <div class="scene-footer"><div><span class="style-number"></span><div><small class="style-en"></small><h2 class="style-name"></h2></div></div><p class="style-line"></p><div class="swatches" aria-label="风格配色"></div></div></section>
 <section class="style-detail"><div><small>01 / 画面质感</small><p id="detail-texture"></p></div><div><small>02 / 界面语言</small><p id="detail-interface"></p></div><div><small>03 / 探险感受</small><p id="detail-feeling"></p></div><button id="choose-style">选这个方向 <span>↗</span></button></section>
-<p id="choice-status" class="choice-status" role="status"></p><footer class="lab-foot"><span>这是风格与轻交互样片，正式游戏会在选定后调整。</span><span>场景、兽首山峰、花草与动作均为美术演绎；知识卡片另列原文依据。</span></footer></main>
+<p id="choice-status" class="choice-status" role="status"></p><footer class="lab-foot"><span>这是风格与轻交互样片。正式游戏已开始采用 03 · 黏土微缩。</span><span>场景、兽首山峰、花草与动作均为美术演绎；知识卡片另列原文依据。</span></footer></main>
 <dialog class="observation" aria-label="观察卡片"></dialog><dialog class="overview" aria-label="四种风格对比"><div class="dialog-heading"><div><p class="kicker">同一个场景，放在一起看</p><h2>四种山海，各有想象。</h2></div><button aria-label="关闭风格对比">×</button></div><div class="overview-grid">${styles.map(s=>`<button data-compare="${s.id}"><img src="${assetPath(`style-lab/${s.id}.png`)}" alt="${s.name}场景" loading="lazy"/><span><b>${s.number}　${s.name}</b><small>进入试玩 ↗</small></span></button>`).join('')}</div></dialog>`;
 
 const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
@@ -66,7 +66,7 @@ function updateChoice(){
   const chosen=styles.find(s=>s.id===choice);
   $('#choose-style').innerHTML=choice===selected.id?'已选这个方向 <span>✓</span>':'选这个方向 <span>↗</span>';
   $('#choose-style').setAttribute('aria-pressed',String(choice===selected.id));
-  $('#choice-status').textContent=chosen?`你选了 ${chosen.number} · ${chosen.name}。可以继续比较，也可以把编号告诉我；正式游戏尚未改变。`:'四款的原文与观察点相同。先感受场景，再看卡片和界面是否合你心意。';
+  $('#choice-status').textContent=chosen?`你选了 ${chosen.number} · ${chosen.name}。这个偏好保存在本机；正式游戏当前采用 03 · 黏土微缩。`:'四款的原文与观察点相同。先感受场景，再看卡片和界面是否合你心意。';
 }
 function updatePlayer(){
   traveler.style.left=`${player.x}%`;traveler.style.top=`${player.y}%`;

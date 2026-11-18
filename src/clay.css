@@ -1,0 +1,29 @@
+/* 03 · LITTLE CLAY WORLD — shared game UI, independent of the style laboratory. */
+:root{--paper:#fff5df;--ink:#354d42;--muted:#737d66;--rust:#ac5a3c;--line:#d6c4a2;background:#e9dfc5;color:var(--ink)}
+body{background:#e9dfc5}
+header{background:linear-gradient(#fff9e9,#f2e5cc);border-bottom:3px solid #d6c4a4;box-shadow:0 4px 18px #403b2920}
+.brand{letter-spacing:2px}.brand small{letter-spacing:1px}.seal{border-radius:12px;background:#b86645;border:2px solid #df9972;box-shadow:inset 0 2px 2px #f5c69d80,0 3px 0 #814e36;transform:rotate(-5deg)}
+nav button,#world-btn,#sound-btn,#pause-btn{border:1px solid #d4c5aa;border-radius:12px;background:linear-gradient(#fffaf0,#f2e6cf);box-shadow:inset 0 1px #fff,0 3px 0 #d6c5a5;color:#425747}
+button:active{filter:brightness(.96)}
+.quest,.exp-task,.trail-minimap{background:linear-gradient(145deg,#fff9e9f5,#f3e6cdf5);border:1px solid #d7c8aa;border-radius:22px;box-shadow:inset 0 2px #fffdf4,0 5px 0 #ac9e7840,0 14px 28px #38513920}
+.quest h1,.exp-task b,.trail-mini-heading strong{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-weight:700}
+.eyebrow{color:#8a744f}.progress-track{border-radius:10px;background:#ddd3b7;box-shadow:inset 0 2px 3px #766b4b20}.progress-track i{border-radius:10px;background:linear-gradient(90deg,#61866e,#a6ad68)}
+.trail-minimap svg{border-radius:12px;border:2px solid #d4c5a3;box-shadow:inset 0 2px 6px #526c4430}.trail-mini-heading{color:#5a7054}
+.location,.exp-water,#guide-btn,.map-zoom,.bottom-bar{border-radius:14px;background:#fff5dfec;border-color:#d0c0a0;box-shadow:0 3px 0 #a99a7730}
+.map-zoom{overflow:hidden}.map-zoom button{color:#5b7359}.touch-controls button{border-radius:14px;background:linear-gradient(#fff9e7,#e8dbbe);box-shadow:inset 0 2px #fff,0 4px 0 #ad9b74;color:#46664f;border:1px solid #c8b895}
+.primary,#exp-observe,.world-primary{border-radius:15px;background:linear-gradient(#5d856a,#456b54);box-shadow:inset 0 2px #8baa87,0 5px 0 #2d4b3b;color:#fff8e7;border:1px solid #446a52}
+.secondary,.answers button,.exp-quiz button,.exp-top button,.exp-bottom button,.world-modes button,.animal-buttons button,.detail-tools button{border-radius:12px;background:linear-gradient(#fffaee,#f0e3c9);border:1px solid #d1c0a0;box-shadow:inset 0 1px #fff,0 3px 0 #c3b18c45}
+.dialog,.art-detail,.exp-dialog,.world-atlas,aside{border-radius:24px;background:#fff5e2;border:1px solid #d5c3a1;box-shadow:inset 0 2px #fffdf6,0 18px 70px #273d3838}
+.dialog h2,.exp-dialog h2,.world-heading h2{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-weight:700;letter-spacing:-.5px}
+.dialog blockquote,.exp-dialog blockquote{color:#976041;border-color:#ddcba9}.annotation{border-radius:12px;background:#efe6cf}
+.art-plate,.detail-canvas,.animal-stage,.exp-specimen{border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 70%,#ece1bd,#fcf4e1 75%);border-color:#dac8a5}.art-plate figcaption{background:#f3e7cf;border-color:#dac8a5}
+.animal-hill{background:#b7c99b}.animal-tap{border-radius:14px;background:#fff5e0e8}.close,.detail-close,.exp-close{border-radius:50%;background:#eaddc1}
+#expedition{background:#f7edd7}.exp-hud{background:linear-gradient(#fff9eb,#f0e2c6);border-bottom:3px solid #d6c5a5}.exp-bottom{background:#f5ead3}.exp-top small{color:#8d7454}
+.mountain-cards>button{border-radius:24px;background:radial-gradient(ellipse at 50% 40%,#fffaec,#e7dfc1);border:1px solid #cdbd9b;box-shadow:inset 0 2px #fffdf4,0 6px 0 #c7b79350}.mountain-cards h2{font-family:'Microsoft YaHei',sans-serif;font-weight:700}.mountain-cards img{filter:drop-shadow(0 12px 8px #59724f26)}
+.world-viewport,.world-location,.world-controls{border-radius:16px}.world-viewport{border:2px solid #cdbf9d;background:#e9e2c9}.world-controls{overflow:hidden}.world-location{background:#eee4ca}
+#overlay.intro-overlay{background:linear-gradient(90deg,#f6ecd9fa 0%,#f5ead6eb 44%,#e8e0bc42 100%)}
+.intro{position:relative;z-index:1}.intro-title{color:#3b5d48;text-shadow:0 3px #d8caa7;letter-spacing:5px}.intro-title i{border-radius:9px;background:#b56d4d;box-shadow:0 3px 0 #80583f}.intro-sub{color:#956847;font-weight:700}.intro-meta{color:#65795a}.intro-note{color:#6b725f}
+.clay-intro-art{position:absolute;right:6%;bottom:8%;width:44%;height:80%;pointer-events:none}.clay-intro-art .clay-tree{width:100%;height:100%;object-fit:contain;filter:drop-shadow(15px 22px 13px #3c563335)}.clay-intro-art .clay-person{position:absolute;bottom:0;left:2%;height:48%;filter:drop-shadow(8px 9px 4px #3c563335)}
+#loading{background:radial-gradient(ellipse,#fff7e5,#dddcc0)}#loading strong{font-family:'Microsoft YaHei',sans-serif}.clay-note{font-size:11px!important;line-height:1.7;color:#7e765d!important}
+@media(max-width:700px){.quest,.exp-task,.trail-minimap{border-radius:16px}.trail-minimap svg{border-radius:8px}.exp-hud button{border-radius:10px}.dialog,.art-detail,.exp-dialog,.world-atlas,aside{border-radius:18px}}
+@media(max-width:600px){.clay-intro-art{right:-4%;bottom:10%;width:62%;height:54%;opacity:.32}#overlay.intro-overlay{background:#f4ebd8e8}.intro-note{max-width:270px}.touch-controls button{border-radius:12px}}
