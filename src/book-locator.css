@@ -1,0 +1,40 @@
+.book-locator {
+  position:fixed; inset:0; margin:auto; padding:18px 24px 14px;
+  width:min(850px,94vw); max-width:94vw; max-height:94dvh; overflow:auto;
+  box-sizing:border-box; background:#fbf3de; color:#3b503e;
+  border:1px solid #bcad8a; border-radius:19px; box-shadow:0 20px 70px #2e402e52;
+}
+.book-locator::backdrop { background:#283d32ac; backdrop-filter:blur(2px); }
+.book-locator .loc-head,.book-locator .loc-tools,.book-locator .loc-tools>div { display:flex; align-items:center; }
+.book-locator .loc-head { justify-content:space-between; gap:10px; }
+.book-locator .loc-head small { font-size:11px; color:#68765f; letter-spacing:1.8px; }
+.book-locator .loc-head h2 { margin:3px 0 2px; font:600 24px/1.4 'SimSun',serif; color:#34533f; }
+.book-locator button {
+  min-height:38px; padding:5px 12px; background:#f3e8cd; color:#39503d;
+  border:1px solid #c4b38f; border-radius:8px; font:inherit; font-size:12px;
+}
+.book-locator button:disabled { opacity:.5; cursor:default; }
+.book-locator button:focus-visible,.book-locator .loc-svg:focus-visible { outline:3px solid #a4583b; outline-offset:1px; }
+.book-locator .loc-place { display:flex; flex-wrap:wrap; gap:5px 11px; align-items:center; margin:9px 0; font-size:13px; line-height:1.5; }
+.book-locator .loc-place b { color:#975c3e; }
+.book-locator .loc-frame { position:relative; border:1px solid #aab99b; border-radius:12px; overflow:hidden; background:#bfd7cf; }
+.book-locator .loc-north { position:absolute; right:8px; top:8px; padding:3px 6px; background:#fff5dbc9; border-radius:4px; font-size:10px; pointer-events:none; }
+.book-locator .loc-svg { display:block; width:100%; height:clamp(220px,52dvh,500px); touch-action:none; cursor:grab; user-select:none; }
+.book-locator .loc-svg:active { cursor:grabbing; }
+.book-locator .loc-node { font-family:'Microsoft YaHei',sans-serif; text-anchor:middle; }
+.book-locator .loc-no { font-size:18px; fill:#65725c; }
+.book-locator .loc-name { font-size:28px; font-weight:600; fill:#355241; }
+.book-locator .loc-here .loc-name,.book-locator .loc-here .loc-no { fill:#fff5dd; }
+.book-locator .loc-pin-name { font-weight:700; font-size:23px; fill:#fff7d8; }
+.book-locator .loc-tools { gap:6px; margin-top:10px; flex-wrap:wrap; justify-content:flex-end; }
+.book-locator .loc-tools>div { margin-right:auto; gap:6px; }
+.book-locator .loc-tools output { min-width:37px; font-size:12px; text-align:center; }
+.book-locator .loc-tools [data-zoom] { min-width:42px; font-size:18px; }
+.book-locator [data-here] { background:#496850; color:#fff6de; }
+.book-locator .loc-note { font-size:11px; color:#61725f; margin:8px 0 0; line-height:1.5; }
+@media(max-width:600px){
+  .book-locator { padding:12px; border-radius:14px; }
+  .book-locator .loc-head h2 { font-size:21px; }
+  .book-locator .loc-svg { height:clamp(200px,44dvh,315px); }
+  .book-locator button { min-height:42px; }
+}

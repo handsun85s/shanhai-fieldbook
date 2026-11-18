@@ -1,0 +1,87 @@
+.book-desk {
+  width: min(100%, 900px);
+  margin: 0 auto;
+  color: #344d3d;
+}
+.book-tools, .book-page-head, .book-collection-line, .book-study-actions, .book-trial-top,
+.book-paging, .book-field-bar, .book-result-paging, .book-retry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.book-tools, .book-page-head, .book-trial-top, .book-paging, .book-field-bar { justify-content: space-between; }
+.book-tools { position: relative; flex-wrap: wrap; margin: 0 0 12px; align-items: flex-start; }
+.book-tools[hidden] { display: none; }
+.book-desk button, .book-lookup summary, .book-desk select, .book-jump input, .book-search input {
+  color: #344d3d; font: inherit; font-size: 14px; border: 1px solid #c7baa1; border-radius: 10px;
+  background: #fff8e9; min-height: 40px; padding: 8px 13px; line-height: 1.45;
+}
+.book-desk button, .book-desk summary { cursor: pointer; }
+.book-desk button:disabled { opacity: .48; cursor: default; }
+.book-desk button:focus-visible, .book-desk input:focus-visible, .book-desk select:focus-visible,
+.book-desk summary:focus-visible { outline: 2px solid #a95234; outline-offset: 2px; }
+.book-desk h2 { font-family: "SimSun","Songti SC",serif; margin: 4px 0; font-size: clamp(23px,3vw,34px); }
+.book-desk h2:focus { outline: none; }
+.book-script { display: flex; gap: 4px; }
+.book-script [aria-pressed=true], .book-desk .book-walk, .book-search button[type=submit] {
+  background: #41634e; color: #fff8e7; border-color: #41634e;
+}
+.book-lookup { flex: 1; min-width: 0; }
+.book-lookup[open] { flex-basis: 100%; }
+.book-lookup summary { display: list-item; width: fit-content; }
+.book-search { display: flex; gap: 8px; align-items: end; padding-top: 12px; }
+.book-search label { display:grid; gap:4px; font-size:12px; }
+.book-search label:first-child { flex: 1; min-width: 0; }
+.book-search input, .book-search select { width: 100%; }
+.book-results { font-size: 13px; }
+.book-clues { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.book-clues strong { margin-right:3px; font-size:13px; }
+.book-clues button { min-height:36px; font-size:13px; padding:6px 11px; }
+.book-clues [aria-pressed=true] { background:#41634e; color:#fff8e7; border-color:#41634e; }
+.book-results ul { list-style:none; padding:0; margin:8px 0; max-height:min(32vh,330px); overflow:auto; }
+.book-results li { margin-bottom: 3px; }
+.book-results li button { width:100%; display:grid; grid-template-columns:minmax(120px, .5fr) 2fr; gap:8px; align-items:start; text-align:left; }
+.book-results li span { color:#666e59; }
+.book-leaf { padding: clamp(13px,3.2vw,36px); border-radius: 18px; background:#fff9eb; border:1px solid #d8c5a2; box-shadow: 0 4px 0 #d7c6aa50; }
+.book-folio, .book-count { font-size:12px; color:#786242; }
+.book-count { white-space:nowrap; }
+.book-collection-line { font-size:12px; color:#55664e; margin:12px 0 18px; }
+.book-progress { height:7px; width:min(45%,170px); accent-color:#6b835b; border:0; background:#e5dbc0; }
+.book-progress::-webkit-progress-bar { background:#e5dbc0; border-radius:9px; }
+.book-progress::-webkit-progress-value { background:#6b835b; border-radius:9px; }
+.book-original, .book-quote { font-family:"SimSun","Songti SC","Noto Serif CJK SC",serif; font-size:clamp(18px,2.1vw,23px); line-height:1.95; letter-spacing:.025em; overflow-wrap:anywhere; }
+.book-original { margin: 16px 0 22px; }
+.book-reading summary { width: fit-content; font-size:13px; color:#566b55; }
+.book-study-actions { flex-wrap: wrap; }
+.book-river-plate { margin:0 0 16px; }
+.book-river-plate summary { color:#526d57; font-size:14px; }
+.book-river-plate figure { margin:10px 0; max-width:360px; }
+.book-river-plate img { display:block; width:100%; border-radius:14px; }
+.book-river-plate figcaption { margin-top:6px; font-size:12px; line-height:1.7; color:#675c46; }
+.book-trial { margin-top:16px; background:#f3ecd8; border-radius:14px; padding:14px 17px; }
+.book-trial p { margin:8px 0; }
+.book-trial-top + p, .book-response { font-size:13px; line-height:1.6; }
+.book-trial-top button { font-size:12px; min-height:34px; }
+.book-quote mark { color:#6e4629; background:#ecdbac; border-radius:5px; padding:0 4px; }
+.book-choice { display:flex; flex-wrap:wrap; gap:8px; }
+.book-response:empty { margin:0; }
+.book-paging { flex-wrap:wrap; margin-top:22px; padding-top:14px; border-top:1px solid #e2d5bb; }
+.book-jump { display:flex; gap:6px; align-items:center; font-size:13px; }
+.book-jump input { width:65px; text-align:center; padding-inline:3px; }
+.book-attribution { font-size:11px; line-height:1.8; color:#73755c; margin-top:18px; }
+.book-attribution a { color:#775738; text-decoration:underline; margin-right:8px; }
+.book-field-bar { margin-bottom:12px; }
+.book-field-bar button { flex-shrink:0; }
+@media(max-width:600px) {
+  .book-page-head { align-items:start; }
+  .book-search { flex-wrap:wrap; }
+  .book-search label:first-child { flex-basis:100%; }
+  .book-search label:nth-child(2) { flex:1; }
+  .book-results li button { grid-template-columns:1fr; gap:1px; }
+  .book-paging { gap:8px; }
+  .book-jump { order:1; width:100%; justify-content:center; }
+  .book-study-actions { align-items:stretch; }
+  .book-desk button, .book-lookup summary { min-height:44px; }
+  .book-script button { padding-inline:9px; }
+  .book-leaf { padding:14px; }
+}

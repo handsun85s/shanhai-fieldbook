@@ -1,0 +1,7 @@
+.journey-page{margin:0;background:#e4dbc3;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#344b3c;}
+.journey-page *,.journey-page *::before,.journey-page *::after{box-sizing:border-box;}
+:where(.journey-page) button{font:inherit;color:inherit;cursor:pointer;border:0;background:transparent;}
+.journey-page .volume-game{width:min(1180px,100%);height:100dvh;max-height:100dvh;border-radius:0;border-block:0;box-shadow:0 0 45px #393a2626;}
+.journey-page .volume-game::backdrop{background:#e4dbc3;}
+.journey-page button:disabled{cursor:default;}
+.journey-page [hidden]{display:none!important;}

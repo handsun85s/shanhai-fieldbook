@@ -56,6 +56,17 @@ button:active{filter:brightness(.96)}
   background: linear-gradient(90deg, #fcf5e5f7 0%, #fcf5e5e8 21%, #fbf2dfc9 33%, #fbf2df35 52%, transparent 65%);
 }
 .intro p, .intro .intro-note, .intro .intro-meta { color: #485a47; }
+.intro-volumes {
+  display: block;
+  margin: 14px 0 4px;
+  padding: 9px 14px;
+  border: 1px solid #bca885;
+  border-radius: 9px;
+  background: #fff6dfed;
+  color: #415a45;
+  font-size: 14px;
+}
+.world-detail .world-primary + .world-primary { margin-top: 8px; }
 @media (max-width: 700px) {
   #overlay.intro-overlay {
     display: block;

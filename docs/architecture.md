@@ -1,5 +1,11 @@
 # 架构与维护
 
+## 十八卷主线
+
+`journey.html` 是与原游戏同源的轻量入口。它通过 `journey.ts` 打开主线，不下载自由探索所需的 Phaser。首页、山海舆图与全书地图也可打开同一份 `campaign.ts`。四座自由行山通过经过白名单校验的 `mountain` 参数回到原场景。
+
+`chapter-studies.ts` 保存十八个代表站、引文所在段及题目。累计卷印按答对题目的连续记录计算。`book-field.ts` 绘制卷中和逐段步道，`study-plate.ts` 管理图版热点，`south-stops.ts` 管理五处南山专属考察。十八卷主线、原句收集和南山山印分别保存。`public/book/` 按卷提供固定原文与对齐简体，`book-reader.ts` 按需载入，全文检索才请求其他卷。[经文来源](book-sources.md)
+
 ## 决策与约束
 
 沿用 Phaser 4 + TypeScript + Vite 静态应用。已有招摇场景使用 Phaser；其他三山使用 Canvas 2D。当前任务不重写引擎，避免改变既有交互。数据只保存在浏览器，不需要登录、数据库或付费服务；刷新保留知识记录，新增山不保存人物坐标。
