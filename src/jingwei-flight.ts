@@ -76,7 +76,7 @@ export function mountFlight(host:HTMLElement, onStudy:()=>void) {
     }else{
       const rings=shore.reduce((n,d)=>n+d.rings,0);
       message('东海，多了一片浅滩',shore.length+' 趟往返，送来'+shore.map(d=>nameOf(d.cargo)).join('、')+'，共穿过 '+rings+' 个风环。');
-      button('把精卫记进北山手记',onStudy,true);
+      button('到山中查证鸟路与水路',onStudy,true);
       button('再筑一片浅滩',()=>{shore=[];persist();toDock();});
     }
     if(phase==='dock'||phase==='paused'){

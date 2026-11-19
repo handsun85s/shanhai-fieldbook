@@ -1,4 +1,4 @@
-import {openCampaign,openJingwei} from './campaign';
+import {openCampaign,openJingwei,openFlight} from './campaign';
 import {southRoute} from './world-data.mjs';
 import './journey.css';
 
@@ -16,5 +16,9 @@ document.addEventListener('campaignclose',()=>{if(!leaving)location.assign(home.
 const query=new URLSearchParams(location.search);
 const volume=Number(query.get('volume'));
 const passage=Number(query.get('passage'));
-if(query.get('game')==='jingwei')openJingwei();
-else openCampaign(volume,Number.isInteger(passage)&&passage>=1?passage-1:undefined);
+if(query.get('game')==='flight')openFlight();
+else if(['jingwei','fieldnotes'].includes(query.get('game')??''))openJingwei(query.get('site')??'bird');
+else {
+  const sentence=Number(query.get('sentence'));
+  openCampaign(volume,Number.isInteger(passage)&&passage>=1?passage-1:undefined,Number.isInteger(sentence)&&sentence>0?sentence-1:undefined);
+}

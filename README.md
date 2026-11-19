@@ -6,7 +6,9 @@
 
 十八卷远行是一条有结局的考察路线。每卷有一条 2D 小径、一幅可点选细看的图版和两项原文查证。玩家获得十八枚卷印后，在营地整理三条跨卷记录，完成通关手记。全书原文可切换简体和底本字形，868 段都能检索、步行探访和挑战原句复原。全书探读可在通关后继续。[经文版本与整理方式](docs/book-sources.md)
 
-想从精卫开始，可以[直接玩「精卫衔石」](https://handsun85s.github.io/shanhai-fieldbook/journey.html?game=jingwei)。选木枝或石子，按住画面或空格扇翅、松开滑翔。越浪、穿过云底，把四份木石送到东海浅滩。每次成功送达都会在当前浏览器留下记录。也可以[进入发鸠山考察](https://handsun85s.github.io/shanhai-fieldbook/journey.html?volume=3)，也可以[直接读《北山经》第 65 段](https://handsun85s.github.io/shanhai-fieldbook/journey.html?volume=3&passage=65)。在原文书页点「查找经文」，可按鸟兽、草木、金玉石、水流或声音找线索。
+山野考察把原文、图注和异地验证连在一起。可以[从发鸠山辨精卫、理水路](https://handsun85s.github.io/shanhai-fieldbook/journey.html?game=jingwei)，也可以[到招摇山辨草木](https://handsun85s.github.io/shanhai-fieldbook/journey.html?game=fieldnotes&site=plants)。十八卷主线考察段和南山首段九座山提供逐句白话和读法，书页可保存每句的个人复述。
+
+[精卫衔石飞行体验](https://handsun85s.github.io/shanhai-fieldbook/journey.html?game=flight)。选木枝或石子，按住画面或空格扇翅、松开滑翔。越浪、穿过云底，把四份木石送到东海浅滩。每次成功送达都会在当前浏览器留下记录。也可以[进入发鸠山考察](https://handsun85s.github.io/shanhai-fieldbook/journey.html?volume=3)，也可以[直接读《北山经》第 65 段](https://handsun85s.github.io/shanhai-fieldbook/journey.html?volume=3&passage=65)。在原文书页点「查找经文」，可按鸟兽、草木、金玉石、水流或声音找线索。
 
 已采用 **03 · 黏土微缩**。四山的步道经过木桥，河岸可见湿石和芦苇，林地散布蕨叶与苔石。打开五种动物的观察卡，点击特征即可放大原画中的对应部位，核对原文后可将发现记入手记。见 [开发步骤与验收](docs/development-plan.md) 和 [真实试玩方案](docs/child-playtest.md)。
 

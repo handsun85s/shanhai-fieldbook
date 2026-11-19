@@ -32,6 +32,12 @@
 3. 异文模板取正文栏，罕字模板取实际 Unicode 字符，例如“丽𪊨”中的第二字。个别字形、地名和断句因版本而异。固定版本链接保留维基文库的异读与校注，读者可以直接核对。
 4. 简体栏用 OpenCC-JS 1.4.2 的通用繁体转大陆简体规则（t → cn），逐段与底本对应。古籍难字及异体字可以保留，查证时以原字栏和底本为准。[OpenCC-JS](https://github.com/nk2028/opencc-js)
 
+## 游戏中的古文精读
+
+逐句编号随本项目底本的句末标点。十八卷的主线考察段及南山首段九处山名合计 27 段、85 句，每句配有为本游戏编写的白话与读法。另有一组常见山行、水路、物产句式，只有全句各小句都能解释时才展示句式白话。读者的复述独立保存在当前浏览器。
+
+古书中的神异作用按叙事口吻释读；有分歧的词保留原字，如旋龟段末的“底”。山坡方位的拓展参照[香港教育局《阴与阳》](https://www.edb.gov.hk/attachment/tc/curriculum-development/kla/pshe/references-and-resources/chinese-history/exploring_chinese_historical_figures_in_short_stories/Article_T1.pdf)。古籍书影的阅读入口来自[国家图书馆中华古籍智慧化服务平台](https://guji.nlc.cn/resource/resourceDetail?id=50)。
+
 ## 复现
 
 在仓库根目录运行以下命令。转换器只在导入时使用，游戏按卷读取静态 JSON。

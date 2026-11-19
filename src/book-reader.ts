@@ -4,6 +4,7 @@ import {readSave,writeSave} from './storage.mjs';
 import {awardKey,buildChallenges,excerptForMatch,readerStorage,searchable} from './book-reader-rules.mjs';
 import {mountBookField} from './book-field';
 import {assetPath} from './assets';
+import {mountSentences} from './sentence-reader';
 import './book-reader.css';
 
 type Book = {title:string; source:string; passages:string[]; simplified:string[]};
@@ -24,7 +25,7 @@ const clueSearches = [
 ];
 type ClueSearch = typeof clueSearches[number];
 
-async function loadVolume(volume:number,signal:AbortSignal) {
+export async function loadVolume(volume:number,signal:AbortSignal) {
   const cached=books.get(volume);
   if(cached) return cached;
   const id=String(volume).padStart(2,'0');
@@ -44,9 +45,10 @@ const readPosition=(v:number)=>lastRead.get(v)??Number(readSave(readerStorage+':
 const textAt=(b:Book,i:number,script:Script)=>script==='simple'?b.simplified[i]:b.passages[i];
 const clampIndex=(i:number,n:number)=>Number.isInteger(i)?Math.max(0,Math.min(n-1,i)):0;
 
-export function mountBookReader(host:HTMLElement, initialVolume:number, initialPassage:number|undefined, onBack:()=>void) {
+export function mountBookReader(host:HTMLElement, initialVolume:number, initialPassage:number|undefined, onBack:()=>void, initialSentence?:number) {
   const abort=new AbortController();
   let volume=initialVolume, index=0, book:Book, completed=new Set<number>();
+  let guided=initialSentence;
   let script:Script=readSave(readerStorage+':script').raw==='"original"'?'original':'simple';
   let activeRequest=0, searchRequest=0, resultPage=0, results:Result[]=[];
   let selectedClue:ClueSearch|undefined;
@@ -89,12 +91,17 @@ export function mountBookReader(host:HTMLElement, initialVolume:number, initialP
       ${volume===1&&index===7?`<details class="book-river-plate"><summary>水中补记 · 看赤鱬</summary><figure>
       <img loading="lazy" src="${assetPath('book-plates/south-7.webp')}" alt="赤鱬的黏土图版，鱼身上有一张人面">
       <figcaption>青丘的英水里有赤鱬。鱼形、人面据本段经文，配色与面容为美术设想。</figcaption></figure></details>`:''}
+      <details class="book-sentences"><summary>逐句读古文 · 查词与白话</summary><div data-sentences></div></details>
       <div class="book-evidence"></div>
       <div class="book-paging"><button data-page="-1" ${first&&volume===1?'disabled':''}>${first&&volume>1?'← 上一卷末段':'← 上一段'}</button>
       <form class="book-jump"><label>跳至 <input type="number" aria-label="输入本卷段号" inputmode="numeric" min="1" max="${length}" required value="${index+1}"> 段</label><button>前往</button></form>
       <button data-page="1" ${last&&volume===18?'disabled':''}>${goLabel}</button></div>
       <footer class="book-attribution">经文录入与标点来自中文维基文库。<a href="${escape(book.source)}" target="_blank" rel="noopener">核对本卷底本 ↗</a>
       <a href="${sourceNotes}" target="_blank" rel="noopener">整理与署名 ↗</a></footer>`;
+    const sentenceBox=$<HTMLDetailsElement>('.book-sentences');
+    const start=guided??0;
+    sentenceBox.ontoggle=()=>{if(sentenceBox.open&&!sentenceBox.querySelector('.sentence-study'))mountSentences(sentenceBox.querySelector('[data-sentences]')!,book,volume,index+1,script==='original',start);};
+    if(guided!==undefined){guided=undefined;sentenceBox.open=true;}
     renderVolumeProgress();
     renderEvidence();
     $('.book-jump').onsubmit=e=>{
@@ -237,6 +244,8 @@ export function mountBookReader(host:HTMLElement, initialVolume:number, initialP
   host.querySelectorAll<HTMLButtonElement>('[data-clue]').forEach(b=>
     b.onclick=()=>void search(clueSearches[Number(b.dataset.clue)]));
   host.querySelectorAll<HTMLButtonElement>('[data-script]').forEach(b=>b.onclick=()=>{
+    const openReader=host.querySelector<HTMLElement>('.book-sentences[open] [data-sentences]');
+    if(openReader)guided=Number(openReader.dataset.sentence??0);
     script=b.dataset.script==='original'?'original':'simple';writeSave(readerStorage+':script',script);
     syncScripts();if(book&&$('.book-leaf').querySelector('.book-page-head'))renderLeaf();
     if($<HTMLDetailsElement>('.book-lookup').open&&(selectedClue||$<HTMLInputElement>('.book-search input').value.trim()))void search(selectedClue);
