@@ -1,4 +1,4 @@
-import {openCampaign} from './campaign';
+import {openCampaign,openJingwei} from './campaign';
 import {southRoute} from './world-data.mjs';
 import './journey.css';
 
@@ -16,4 +16,5 @@ document.addEventListener('campaignclose',()=>{if(!leaving)location.assign(home.
 const query=new URLSearchParams(location.search);
 const volume=Number(query.get('volume'));
 const passage=Number(query.get('passage'));
-openCampaign(volume,Number.isInteger(passage)&&passage>=1?passage-1:undefined);
+if(query.get('game')==='jingwei')openJingwei();
+else openCampaign(volume,Number.isInteger(passage)&&passage>=1?passage-1:undefined);

@@ -9,6 +9,7 @@ import {readSave, writeSave} from './storage.mjs';
 import {escapeHTML} from './notebook.mjs';
 import {sound} from './sound';
 import {assetPath} from './assets';
+import {mountFlight} from './jingwei-flight';
 import './campaign.css';
 
 type Save = {current:number;arrived:number[];answers:Record<number,number[]>;finale:number[]};
@@ -61,7 +62,8 @@ function status(v:number){
 function catalog(){
   const count=seals(),v=state.current,chapter=chapters[v-1],study=studies[v-1];
   const visible=chapters.filter(c=>filter==='全部'||c.group===filter);
-  shell('十八卷远行',`<div class="vol-hero"><div class="vol-hero-copy"><p class="vol-kicker">我的山海手记</p><h1>十八卷远行</h1><p>走进山川，观察异兽和草木。每卷找回两条有出处的线索，集齐十八枚卷印后回营合卷。</p><div class="vol-meter" aria-label="已收集卷印 ${count} 枚"><i style="width:${count/18*100}%"></i></div><strong class="vol-tally">${count} / 18 枚卷印</strong><div class="vol-actions"><button class="vol-main" data-current>${count===18?(state.finale.length===3?'重看通关手记':'回营合卷'):(state.arrived.includes(v)?'继续':'启程')+' · '+chapter.name} →</button></div></div><img src="${cover(v)}" alt="${esc(study.place)}黏土图版" fetchpriority="high"></div><div class="vol-index"><h2>选一卷出发</h2><div class="vol-filters" role="group" aria-label="按篇类筛选">${['全部','山经','海外','海内','大荒'].map(g=>`<button data-group="${g}" aria-pressed="${g===filter}">${g}</button>`).join('')}</div></div><div class="vol-grid">${visible.map(c=>`<button class="vol-card" data-volume="${c.number}"><img src="${cover(c.number)}" alt="" loading="lazy"><span><small>卷 ${id(c.number)} · ${c.group}</small><strong>${c.name}</strong><em>${esc(studies[c.number-1].place)}</em><b>${finished(c.number)?'✓ ':''}${status(c.number)} ↗</b></span></button>`).join('')}</div>`);
+  shell('十八卷远行',`<div class="vol-hero"><div class="vol-hero-copy"><p class="vol-kicker">我的山海手记</p><h1>十八卷远行</h1><p>走进山川，观察异兽和草木。每卷找回两条有出处的线索，集齐十八枚卷印后回营合卷。</p><div class="vol-meter" aria-label="已收集卷印 ${count} 枚"><i style="width:${count/18*100}%"></i></div><strong class="vol-tally">${count} / 18 枚卷印</strong><div class="vol-actions"><button class="vol-main" data-current>${count===18?(state.finale.length===3?'重看通关手记':'回营合卷'):(state.arrived.includes(v)?'继续':'启程')+' · '+chapter.name} →</button><button class="vol-alt" data-flight>飞行挑战 · 精卫衔石 ↗</button></div></div><img src="${cover(v)}" alt="${esc(study.place)}黏土图版" fetchpriority="high"></div><div class="vol-index"><h2>选一卷出发</h2><div class="vol-filters" role="group" aria-label="按篇类筛选">${['全部','山经','海外','海内','大荒'].map(g=>`<button data-group="${g}" aria-pressed="${g===filter}">${g}</button>`).join('')}</div></div><div class="vol-grid">${visible.map(c=>`<button class="vol-card" data-volume="${c.number}"><img src="${cover(c.number)}" alt="" loading="lazy"><span><small>卷 ${id(c.number)} · ${c.group}</small><strong>${c.name}</strong><em>${esc(studies[c.number-1].place)}</em><b>${finished(c.number)?'✓ ':''}${status(c.number)} ↗</b></span></button>`).join('')}</div>`);
+  listen('[data-flight]',openJingwei);
   listen('[data-current]',()=>count===18?finale():chapterView(v));
   dialog.querySelectorAll<HTMLButtonElement>('[data-volume]').forEach(b=>b.onclick=()=>chapterView(Number(b.dataset.volume)));
   dialog.querySelectorAll<HTMLButtonElement>('[data-group]').forEach(b=>b.onclick=()=>{
@@ -73,7 +75,7 @@ function chapterView(v:number){
   const study=studies[v-1],chapter=chapters[v-1];
   state.current=v;save();
   const visited=state.arrived.includes(v);
-  shell(chapter.name,`<div class="vol-chapter"><img class="vol-front" src="${cover(v)}" alt="${esc(study.place)}黏土图版"><div class="vol-brief"><p class="vol-kicker">卷 ${id(v)} · ${chapter.name}</p><h1>${esc(study.place)}</h1><p>${esc(study.lead)}</p><div class="vol-actions"><button class="vol-main" data-go>${finished(v)?'翻阅卷印':visited?'接着核对线索':'走进考察地'} →</button><button class="vol-alt" data-reader>翻阅本卷全文</button>${visited?'<button class="vol-link" data-walk>再走一次小径</button>':''}</div></div></div>`,catalog);
+  shell(chapter.name,`<div class="vol-chapter"><img class="vol-front" src="${cover(v)}" alt="${esc(study.place)}黏土图版"><div class="vol-brief"><p class="vol-kicker">卷 ${id(v)} · ${chapter.name}</p><h1>${esc(study.place)}</h1><p>${esc(study.lead)}</p><div class="vol-actions"><button class="vol-main" data-go>${v===3&&!visited?'衔木石渡东海':finished(v)?'翻阅卷印':visited?'接着核对线索':'走进考察地'} →</button>${v===3&&visited?'<button class="vol-alt" data-flight>精卫衔石 · 再飞一趟</button>':''}<button class="vol-alt" data-reader>翻阅本卷全文</button>${visited||v===3?'<button class="vol-link" data-walk>'+ (visited?'再走一次小径':'沿小径步行考察')+'</button>':''}</div></div></div>`,catalog);
   if(v===1){
     const section=document.createElement('section');
     section.className='vol-south';
@@ -85,7 +87,8 @@ function chapterView(v:number){
       else southStop(index);
     });
   }
-  listen('[data-go]',()=>finished(v)?seal(v):visited?studyView(v):field(v));
+  listen('[data-flight]',openJingwei);
+  listen('[data-go]',()=>v===3&&!visited?openJingwei():finished(v)?seal(v):visited?studyView(v):field(v));
   listen('[data-reader]',()=>reader(v));
   listen('[data-walk]',()=>field(v));
 }
@@ -181,6 +184,15 @@ export function openCampaign(volume?:number,passage?:number){
   if(!dialog.open){returnFocus=document.activeElement as HTMLElement;dialog.showModal();sound.stopCall();document.dispatchEvent(new Event('campaignopen'));}
   if(volume&&validVolume(volume)){if(passage!==undefined)reader(volume,passage);else chapterView(volume);}
   else catalog();
+}
+export function openJingwei(){
+  if(!dialog.open)openCampaign();
+  state.current=3;save();
+  shell('北山经 · 飞行挑战','<div class="jw-host"></div>',()=>chapterView(3));
+  cleanup=mountFlight($('.jw-host'),()=>{
+    if(!state.arrived.includes(3))state.arrived.push(3);
+    state.current=3;save();studyView(3);
+  });
 }
 export function openSouthStop(index:number){
   if(!southRoute[index]||southRoute[index].open)return;
